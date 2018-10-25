@@ -1,0 +1,270 @@
+{
+	"sheets": [
+		{
+			"name": "UnitTemplate",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "id"
+				},
+				{
+					"typeStr": "1",
+					"name": "name"
+				},
+				{
+					"typeStr": "3",
+					"name": "movement"
+				},
+				{
+					"typeStr": "3",
+					"name": "range"
+				},
+				{
+					"typeStr": "3",
+					"name": "damage"
+				},
+				{
+					"typeStr": "3",
+					"name": "health"
+				},
+				{
+					"typeStr": "3",
+					"name": "cost"
+				},
+				{
+					"typeStr": "5:TERRAIN,ZERG",
+					"name": "affiliation",
+					"display": null
+				},
+				{
+					"typeStr": "8",
+					"name": "Preved"
+				}
+			],
+			"lines": [
+				{
+					"id": "marine",
+					"movement": 2,
+					"range": 2,
+					"damage": 2,
+					"name": "%MARINE%",
+					"affiliation": 0,
+					"health": 5,
+					"cost": 2,
+					"Preved": [
+						{
+							"Hello": "you looking for"
+						}
+					]
+				},
+				{
+					"id": "medic",
+					"movement": 2,
+					"range": 1,
+					"damage": 1,
+					"name": "%MEDIC%",
+					"affiliation": 0,
+					"health": 3,
+					"cost": 2,
+					"Preved": [
+						{
+							"Hello": "is it me"
+						}
+					]
+				},
+				{
+					"id": "ghost",
+					"name": "%GHOST%",
+					"movement": 2,
+					"range": 3,
+					"damage": 3,
+					"affiliation": 0,
+					"health": 4,
+					"cost": 3,
+					"Preved": []
+				},
+				{
+					"id": "zergling",
+					"name": "%ZERGLING%",
+					"movement": 3,
+					"range": 1,
+					"damage": 1,
+					"affiliation": 1,
+					"health": 2,
+					"cost": 1,
+					"Preved": []
+				},
+				{
+					"id": "hydralisk",
+					"name": "%HYDRALISK%",
+					"movement": 1,
+					"range": 2,
+					"damage": 3,
+					"affiliation": 1,
+					"health": 6,
+					"cost": 3,
+					"Preved": []
+				},
+				{
+					"id": "ultralisk",
+					"name": "%ULTRALISK%",
+					"movement": 2,
+					"range": 1,
+					"damage": 5,
+					"health": 10,
+					"affiliation": 1,
+					"cost": 6,
+					"Preved": []
+				}
+			],
+			"separators": [
+				0,
+				3,
+				6
+			],
+			"props": {
+				"separatorTitles": [
+					"terrain units",
+					"zerg units",
+					"asdfas"
+				]
+			}
+		},
+		{
+			"name": "HexTemplate",
+			"columns": [
+				{
+					"typeStr": "0",
+					"name": "id"
+				},
+				{
+					"typeStr": "9:Element",
+					"name": "element",
+					"display": null
+				},
+				{
+					"typeStr": "11",
+					"name": "visualMarker",
+					"display": null
+				},
+				{
+					"typeStr": "5:WALKABLE,NONWALKABLE",
+					"name": "modifier",
+					"display": null
+				}
+			],
+			"lines": [
+				{
+					"id": "fireTile",
+					"visualMarker": 14490909,
+					"element": [
+						0
+					],
+					"modifier": 0
+				},
+				{
+					"id": "waterTile",
+					"visualMarker": 3908583,
+					"element": [
+						1
+					],
+					"modifier": 0
+				},
+				{
+					"id": "airTile",
+					"visualMarker": 11662580,
+					"element": [
+						2
+					],
+					"modifier": 0
+				},
+				{
+					"id": "groundTile",
+					"visualMarker": 8469553,
+					"modifier": 0,
+					"element": [
+						2
+					]
+				},
+				{
+					"id": "mountainTile",
+					"visualMarker": 13092550,
+					"modifier": 1,
+					"element": [
+						4
+					]
+				},
+				{
+					"id": "voidTile",
+					"visualMarker": 0,
+					"modifier": 1,
+					"element": [
+						4
+					]
+				}
+			],
+			"separators": [],
+			"props": {}
+		},
+		{
+			"name": "UnitTemplate@Preved",
+			"props": {
+				"hide": true
+			},
+			"separators": [],
+			"lines": [],
+			"columns": [
+				{
+					"typeStr": "1",
+					"name": "Hello",
+					"display": null
+				}
+			]
+		}
+	],
+	"customTypes": [
+		{
+			"name": "Element",
+			"cases": [
+				{
+					"name": "FIRE",
+					"args": []
+				},
+				{
+					"name": "WATER",
+					"args": []
+				},
+				{
+					"name": "AIR",
+					"args": []
+				},
+				{
+					"name": "GROUND",
+					"args": []
+				},
+				{
+					"name": "NONE",
+					"args": []
+				}
+			]
+		},
+		{
+			"name": "MockupCustomType",
+			"cases": [
+				{
+					"name": "PRIVET",
+					"args": []
+				},
+				{
+					"name": "ANDREY",
+					"args": []
+				},
+				{
+					"name": "NU_POZOVI_MENYA_SKOREY",
+					"args": []
+				}
+			]
+		}
+	],
+	"compress": false
+}
