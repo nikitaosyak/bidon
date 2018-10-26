@@ -35,10 +35,6 @@
 					"typeStr": "5:TERRAIN,ZERG",
 					"name": "affiliation",
 					"display": null
-				},
-				{
-					"typeStr": "8",
-					"name": "Preved"
 				}
 			],
 			"lines": [
@@ -50,12 +46,7 @@
 					"name": "%MARINE%",
 					"affiliation": 0,
 					"health": 5,
-					"cost": 2,
-					"Preved": [
-						{
-							"Hello": "you looking for"
-						}
-					]
+					"cost": 2
 				},
 				{
 					"id": "medic",
@@ -65,12 +56,7 @@
 					"name": "%MEDIC%",
 					"affiliation": 0,
 					"health": 3,
-					"cost": 2,
-					"Preved": [
-						{
-							"Hello": "is it me"
-						}
-					]
+					"cost": 2
 				},
 				{
 					"id": "ghost",
@@ -80,8 +66,7 @@
 					"damage": 3,
 					"affiliation": 0,
 					"health": 4,
-					"cost": 3,
-					"Preved": []
+					"cost": 3
 				},
 				{
 					"id": "zergling",
@@ -91,8 +76,7 @@
 					"damage": 1,
 					"affiliation": 1,
 					"health": 2,
-					"cost": 1,
-					"Preved": []
+					"cost": 1
 				},
 				{
 					"id": "hydralisk",
@@ -102,8 +86,7 @@
 					"damage": 3,
 					"affiliation": 1,
 					"health": 6,
-					"cost": 3,
-					"Preved": []
+					"cost": 3
 				},
 				{
 					"id": "ultralisk",
@@ -113,8 +96,7 @@
 					"damage": 5,
 					"health": 10,
 					"affiliation": 1,
-					"cost": 6,
-					"Preved": []
+					"cost": 6
 				}
 			],
 			"separators": [
@@ -205,21 +187,6 @@
 			],
 			"separators": [],
 			"props": {}
-		},
-		{
-			"name": "UnitTemplate@Preved",
-			"props": {
-				"hide": true
-			},
-			"separators": [],
-			"lines": [],
-			"columns": [
-				{
-					"typeStr": "1",
-					"name": "Hello",
-					"display": null
-				}
-			]
 		}
 	],
 	"customTypes": [
