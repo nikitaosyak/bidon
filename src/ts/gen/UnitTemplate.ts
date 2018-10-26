@@ -1,5 +1,6 @@
 
-namespace gen {
+import {CDBID} from "./base"
+export module gen {
   import Affiliation = gen.UnitTemplate.Affiliation
   import Values = gen.UnitTemplate.Values
 
@@ -13,9 +14,8 @@ namespace gen {
     public readonly health: number
     public readonly cost: number
     public readonly affiliation: Affiliation
-    public readonly preved: string[]
 
-    constructor(id: CDBID, name: string, movement: number, range: number, damage: number, health: number, cost: number, affiliation: Affiliation, preved: string[]) {
+    constructor(id: CDBID, name: string, movement: number, range: number, damage: number, health: number, cost: number, affiliation: Affiliation) {
       this.id = id
       this.name = name
       this.movement = movement
@@ -24,11 +24,10 @@ namespace gen {
       this.health = health
       this.cost = cost
       this.affiliation = affiliation
-      this.preved = preved
     }
   }
 }
-namespace gen.UnitTemplate {
+export module gen.UnitTemplate {
 
   export enum Affiliation {
     TERRAIN = "TERRAIN",

@@ -47,8 +47,9 @@ module.exports = () => {
     }).join('\n')
 
     const customTypesSource = `
-namespace gen {
-  export type CDBID = string
+export type CDBID = string
+export module gen {
+  
 
 ${allEnums}
 }`
@@ -82,7 +83,8 @@ ${allEnums}
         imports.push(`  import Values = gen.${sheet.name}.Values`)
 
         const sheetTypeSource = `
-namespace gen {
+import {CDBID} from "./base"
+export module gen {
 ${imports.join('\n')}
 
   export class ${sheet.name} {
@@ -94,7 +96,7 @@ ${assign}
     }
   }
 }
-namespace gen.${sheet.name} {
+export module gen.${sheet.name} {
 
 ${classEnums}
 
@@ -108,6 +110,20 @@ ${valuesEnum}
     //
     // create main cdb class
 
+    const cdbSource = `
+export module gen {
+  export class CDB {
+    public readonly data:object
+    
+    // fields
+    
+    // ctor
+    constructor(rawData:string) {
+      this.data = JSON.parse(rawData)
+    }
+  }
+}`
+    fs.writeFileSync(`src/ts/gen/CDB.ts`, cdbSource, 'utf8')
 
     resolve()
   })

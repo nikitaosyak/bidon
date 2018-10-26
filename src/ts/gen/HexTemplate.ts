@@ -1,5 +1,6 @@
 
-namespace gen {
+import {CDBID} from "./base"
+export module gen {
   import Modifier = gen.HexTemplate.Modifier
   import Values = gen.HexTemplate.Values
 
@@ -18,7 +19,7 @@ namespace gen {
     }
   }
 }
-namespace gen.HexTemplate {
+export module gen.HexTemplate {
 
   export enum Modifier {
     WALKABLE = "WALKABLE",

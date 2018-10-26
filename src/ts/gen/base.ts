@@ -1,6 +1,7 @@
 
-namespace gen {
-  export type CDBID = string
+export type CDBID = string
+export module gen {
+  
 
   export enum Element {
     FIRE = "FIRE",

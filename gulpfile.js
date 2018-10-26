@@ -70,6 +70,7 @@ gulp.task('webpack', ['transpile'], () => {
 })
 
 gulp.task('deploy-static', ['webpack'], () => {
+  fs.copyFileSync('gameData/gameData.cdb', 'build/gameData.cdb')
   fs.copyFileSync('src/index.html', 'build/index.html')
 })
 
@@ -82,14 +83,7 @@ gulp.task('start-watch', () => {
   mainWatcher = gulp.watch(['src/**/*'], ['reload'])
 })
 
-gulp.task('stop-watch', () => {
-  if (mainWatcher) {
-    mainWatcher.end()
-    mainWatcher = null
-  }
-})
-
-gulp.task('codegen', ['stop-watch'], () => {
+gulp.task('codegen', () => {
   if (mainWatcher) {
     mainWatcher.end()
     mainWatcher = null

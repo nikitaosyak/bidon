@@ -1,5 +1,6 @@
 
 export enum Events {
+  ASSETS_LOAD_COMPLETE,
   RESIZE
 }
 
@@ -23,7 +24,6 @@ export class Emitter {
   }
 
   emit(event:Events, ...eventData:any[]) {
-    console.log('preved event')
     if (event in this.dict) {
       this.dict[event].forEach(callback => callback.apply(null, eventData))
     }
