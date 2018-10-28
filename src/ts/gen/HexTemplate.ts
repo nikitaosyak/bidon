@@ -2,7 +2,6 @@
 import {CDBID} from "./base"
 export module gen {
   import Modifier = gen.HexTemplate.Modifier
-  import Values = gen.HexTemplate.Values
 
   export class HexTemplate {
 
@@ -22,17 +21,17 @@ export module gen {
 export module gen.HexTemplate {
 
   export enum Modifier {
-    WALKABLE = "WALKABLE",
-    NONWALKABLE = "NONWALKABLE"
+    WALKABLE,
+    NONWALKABLE
   }
 
   export enum Values {
-    fireTile = "fireTile",
-    waterTile = "waterTile",
-    airTile = "airTile",
-    groundTile = "groundTile",
-    mountainTile = "mountainTile",
-    voidTile = "voidTile"
+    fireTile,
+    waterTile,
+    airTile,
+    groundTile,
+    mountainTile,
+    voidTile
   }
 
 }

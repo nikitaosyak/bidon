@@ -17,4 +17,15 @@ export class Utils {
       req.send(null)
     })
   }
+
+  static getEnumOptions(E: any): number[] {
+    return Object.keys(E)
+      .filter(k => typeof E[k] !== 'number')
+      .map(v => Number(v))
+  }
+
+  static getEnumOptionsStr(E: any): string[] {
+    return Object.keys(E)
+      .filter(k => typeof E[k] === 'number')
+  }
 }

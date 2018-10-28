@@ -2,7 +2,6 @@
 import {CDBID} from "./base"
 export module gen {
   import Affiliation = gen.UnitTemplate.Affiliation
-  import Values = gen.UnitTemplate.Values
 
   export class UnitTemplate {
 
@@ -30,17 +29,17 @@ export module gen {
 export module gen.UnitTemplate {
 
   export enum Affiliation {
-    TERRAIN = "TERRAIN",
-    ZERG = "ZERG"
+    TERRAIN,
+    ZERG
   }
 
   export enum Values {
-    marine = "marine",
-    medic = "medic",
-    ghost = "ghost",
-    zergling = "zergling",
-    hydralisk = "hydralisk",
-    ultralisk = "ultralisk"
+    marine,
+    medic,
+    ghost,
+    zergling,
+    hydralisk,
+    ultralisk
   }
 
 }

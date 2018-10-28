@@ -64,7 +64,7 @@ ${allEnums}
         const classEnums = sheet.columns
           .filter(column => column.typeStr[0] === '5')
           .map(column => {
-            const options = column.typeStr.split(':')[1].split(',').map(o => `    ${o} = "${o}"`)
+            const options = column.typeStr.split(':')[1].split(',').map(o => `    ${o}`)
             return `  export enum ${capitalize(column.name)} {\n${options.join(',\n')}\n  }`
           }).join('\n')
         let imports = []
@@ -79,8 +79,7 @@ ${allEnums}
         const args = fieldStore.map(f => `${f[0]}: ${f[1]}`).join(', ')
         const assign = fieldStore.map(f => `      this.${f[0]} = ${f[0]}`).join('\n')
 
-        const valuesEnum = `  export enum Values {\n${sheet.lines.map(line => `    ${line.id} = "${line.id}"`).join(',\n')}\n  }`
-        imports.push(`  import Values = gen.${sheet.name}.Values`)
+        const valuesEnum = `  export enum Values {\n${sheet.lines.map(line => `    ${line.id}`).join(',\n')}\n  }`
 
         const sheetTypeSource = `
 import {CDBID} from "./base"
@@ -109,6 +108,10 @@ ${valuesEnum}
 
     //
     // create main cdb class
+
+    gameData.sheets
+      .filter(sheet => !/^.*@.*$/.test(sheet.name))
+      // .map(sheet => )
 
     const cdbSource = `
 export module gen {

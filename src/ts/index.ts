@@ -9,7 +9,6 @@ window.onload = () => {
   }
 
   Facade.$.on(Events.ASSETS_LOAD_COMPLETE, () => {
-    console.log(Facade.$)
     gameLoop()
   })
 }
