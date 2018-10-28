@@ -1,8 +1,7 @@
-import {gen} from "../gen/HexTemplate";
 import {Utils} from "../utils/Utils";
+import {HexTemplate} from "../gen/HexTemplate";
 
 export module grid {
-  import HexTemplate = gen.HexTemplate;
 
   export class LandscapeGenerator {
 

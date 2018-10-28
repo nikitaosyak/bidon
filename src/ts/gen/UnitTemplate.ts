@@ -1,32 +1,29 @@
+import {CDBID, HEXCOLOR, Element, intToRGB} from "./base"
 
-import {CDBID} from "./base"
-export module gen {
-  import Affiliation = gen.UnitTemplate.Affiliation
+export class UnitTemplate {
 
-  export class UnitTemplate {
+  public readonly id: CDBID
+  public readonly name: string
+  public readonly movement: number
+  public readonly range: number
+  public readonly damage: number
+  public readonly health: number
+  public readonly cost: number
+  public readonly affiliation: UnitTemplate.Affiliation
 
-    public readonly id: CDBID
-    public readonly name: string
-    public readonly movement: number
-    public readonly range: number
-    public readonly damage: number
-    public readonly health: number
-    public readonly cost: number
-    public readonly affiliation: Affiliation
-
-    constructor(id: CDBID, name: string, movement: number, range: number, damage: number, health: number, cost: number, affiliation: Affiliation) {
-      this.id = id
-      this.name = name
-      this.movement = movement
-      this.range = range
-      this.damage = damage
-      this.health = health
-      this.cost = cost
-      this.affiliation = affiliation
-    }
+  constructor(json: any) {
+    this.id = json.id as CDBID
+    this.name = json.name as string
+    this.movement = json.movement as number
+    this.range = json.range as number
+    this.damage = json.damage as number
+    this.health = json.health as number
+    this.cost = json.cost as number
+    this.affiliation = json.affiliation as UnitTemplate.Affiliation
   }
 }
-export module gen.UnitTemplate {
+
+export module UnitTemplate {
 
   export enum Affiliation {
     TERRAIN,

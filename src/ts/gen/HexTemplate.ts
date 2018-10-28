@@ -1,24 +1,21 @@
+import {CDBID, HEXCOLOR, Element, intToRGB} from "./base"
 
-import {CDBID} from "./base"
-export module gen {
-  import Modifier = gen.HexTemplate.Modifier
+export class HexTemplate {
 
-  export class HexTemplate {
+  public readonly id: CDBID
+  public readonly element: Element
+  public readonly visualMarker: HEXCOLOR
+  public readonly modifier: HexTemplate.Modifier
 
-    public readonly id: CDBID
-    public readonly element: Element
-    public readonly visualmarker: number
-    public readonly modifier: Modifier
-
-    constructor(id: CDBID, element: Element, visualmarker: number, modifier: Modifier) {
-      this.id = id
-      this.element = element
-      this.visualmarker = visualmarker
-      this.modifier = modifier
-    }
+  constructor(json: any) {
+    this.id = json.id as CDBID
+    this.element = json.element[0] as Element
+    this.visualMarker = intToRGB(json.visualMarker)
+    this.modifier = json.modifier as HexTemplate.Modifier
   }
 }
-export module gen.HexTemplate {
+
+export module HexTemplate {
 
   export enum Modifier {
     WALKABLE,

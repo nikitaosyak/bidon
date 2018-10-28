@@ -3,8 +3,7 @@ import {Resizer} from "./Resizer";
 import {Emitter, Events} from "./events";
 import {applyMixins} from "./mixins";
 import {Utils} from "./utils/Utils";
-import {gen} from "./gen/CDB";
-import CDB = gen.CDB;
+import {CDB} from "./gen/CDB";
 
 export class Facade implements Emitter {
   private static _instance: Facade
