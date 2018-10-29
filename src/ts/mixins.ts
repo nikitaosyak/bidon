@@ -6,3 +6,5 @@ export function applyMixins(target: any, mixins: any[]):void {
     });
   });
 }
+
+export interface IUpdatable { update(dt: number): void }

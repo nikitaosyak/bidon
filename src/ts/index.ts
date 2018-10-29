@@ -4,7 +4,7 @@ import {Events} from "./events";
 window.onload = () => {
 
   const gameLoop = () => {
-    Facade.$.renderer.update(10)
+    Facade.$.update(10)
     requestAnimationFrame(gameLoop)
   }
 

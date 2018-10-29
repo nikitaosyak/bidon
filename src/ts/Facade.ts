@@ -1,11 +1,11 @@
 import {Renderer} from "./Renderer";
 import {Resizer} from "./Resizer";
 import {Emitter, Events} from "./events";
-import {applyMixins} from "./mixins";
+import {applyMixins, IUpdatable} from "./mixins";
 import {Utils} from "./utils/Utils";
 import {CDB} from "./gen/CDB";
 
-export class Facade implements Emitter {
+export class Facade implements Emitter, IUpdatable {
   private static _instance: Facade
   private constructor() {
 
@@ -14,6 +14,10 @@ export class Facade implements Emitter {
 
     this._resizer = new Resizer()
     this._renderer = new Renderer()
+
+    this._resizer.on(Events.RESIZE, () => {
+      this._renderer.resize()
+    })
 
     Utils.loadJSON('./gameData.cdb')
       .then(rawData => {
@@ -32,6 +36,11 @@ export class Facade implements Emitter {
   private _cdb: CDB; get cdb() { return this._cdb }
   private readonly _renderer: Renderer; get renderer() { return this._renderer }
   private readonly _resizer: Resizer; get resizer() { return this._resizer }
+
+  public update(dt:number): void {
+    this._resizer.update(dt)
+    this._renderer.update(dt)
+  }
 
   //
   // emitter mixin boilerplate
