@@ -1,9 +1,11 @@
 import {Renderer} from "./Renderer";
 import {Resizer} from "./Resizer";
 import {Emitter, Events} from "./events";
-import {applyMixins, IUpdatable} from "./mixins";
+import {applyMixins, IUpdatable, VisualHex} from "./mixins";
 import {Utils} from "./utils/Utils";
 import {CDB} from "./gen/CDB";
+import {Assets} from "./utils/Assets";
+import {Hexagon} from "./grid/Hexagon";
 
 export class Facade implements Emitter, IUpdatable {
   private static _instance: Facade
@@ -11,6 +13,7 @@ export class Facade implements Emitter, IUpdatable {
 
     applyMixins(Facade, [Emitter])
     applyMixins(Resizer, [Emitter])
+    applyMixins(Hexagon, [VisualHex])
 
     this._resizer = new Resizer()
     this._renderer = new Renderer()
@@ -22,7 +25,10 @@ export class Facade implements Emitter, IUpdatable {
     Utils.loadJSON('./gameData.cdb')
       .then(rawData => {
         this._cdb = new CDB(rawData)
-        this.emit(Events.ASSETS_LOAD_COMPLETE)
+        Assets.load('hex', 'assets/hex.gltf')
+          .then(() => {
+            this.emit(Events.ASSETS_LOAD_COMPLETE)
+          })
       })
       .catch(e => {
         console.log('e?', e)

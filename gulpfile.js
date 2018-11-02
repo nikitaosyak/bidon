@@ -18,7 +18,7 @@ gulp.task('connect', () => {
 
 gulp.task('prepare-build-directory', () => {
   if (fs.existsSync('build')) {
-    return gulp.src('build/**/*', {read: false})
+    return gulp.src('build/*', {read: false})
       .pipe(require('gulp-rimraf')({force: true}))
   } else {
     fs.mkdirSync('build/')
@@ -72,6 +72,8 @@ gulp.task('webpack', ['transpile'], () => {
 gulp.task('deploy-static', ['webpack'], () => {
   fs.copyFileSync('gameData/gameData.cdb', 'build/gameData.cdb')
   fs.copyFileSync('src/index.html', 'build/index.html')
+
+  return gulp.src(['assets/**/*']).pipe(gulp.dest('build/assets'))
 })
 
 gulp.task('reload', ['deploy-static'], () => {
