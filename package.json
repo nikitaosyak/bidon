@@ -24,6 +24,7 @@
   },
   "dependencies": {
     "seedrandom": "^2.4.4",
+    "stats.js": "^0.17.0",
     "three": "^0.97.0",
     "three-gltf-loader": "^1.97.0",
     "three-orbitcontrols-ts": "^0.1.2"
