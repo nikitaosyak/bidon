@@ -23,6 +23,7 @@
     "webpack-stream": "^5.1.1"
   },
   "dependencies": {
+    "@xailabs/three-renderer-stats": "^1.0.4",
     "seedrandom": "^2.4.4",
     "stats.js": "^0.17.0",
     "three": "^0.97.0",

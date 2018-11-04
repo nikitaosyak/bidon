@@ -3,6 +3,7 @@ import {OrbitControls} from "three-orbitcontrols-ts";
 import {IUpdatable} from "./mixins";
 import {Facade} from "./Facade";
 import {Vector3} from "three";
+import RendererStats  = require('@xailabs/three-renderer-stats')// MACRO: prod-cutout
 
 export class Renderer implements IUpdatable {
 
@@ -12,7 +13,14 @@ export class Renderer implements IUpdatable {
   private readonly _renderer: THREE.WebGLRenderer
   private readonly _controls
 
+  private readonly stats2: RendererStats// MACRO: prod-cutout
+
   constructor() {
+    this.stats2 = new RendererStats()                   // MACRO: prod-cutout
+    this.stats2.domElement.style.position	= 'absolute'  // MACRO: prod-cutout
+    this.stats2.domElement.style.left	= '0px'           // MACRO: prod-cutout
+    this.stats2.domElement.style.bottom	= '0px'         // MACRO: prod-cutout
+    document.body.appendChild( this.stats2.domElement ) // MACRO: prod-cutout
 
     this._renderer = new THREE.WebGLRenderer({
       canvas: document.getElementById('canvas') as HTMLCanvasElement,
@@ -59,6 +67,7 @@ export class Renderer implements IUpdatable {
 
   public update(dt: number):void {
     this._renderer.render(this._scene, this._camera)
+    this.stats2.update(this._renderer)// MACRO: prod-cutout
     this._controls.update()
   }
 }
