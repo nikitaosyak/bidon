@@ -39,9 +39,15 @@ export class Renderer implements IUpdatable {
     this._controls.maxPolarAngle = Math.PI/2
     this._controls.update()
 
-    const l = new THREE.PointLight("#ccffcc", 2, 100)
+    this._scene.add(new THREE.AmbientLight('#404040', 0.9))
+
+    const l = new THREE.PointLight("#f0f0f0", 0.4, 100)
     l.position.set(5, 5, 5)
     this._scene.add(l)
+
+    const l1 = new THREE.PointLight("#f0f0f0", 0.4, 100)
+    l1.position.set(-5, -5, -5)
+    this._scene.add(l1)
   }
 
   public resize(): void {

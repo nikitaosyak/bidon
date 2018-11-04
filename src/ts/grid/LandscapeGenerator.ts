@@ -1,12 +1,14 @@
 import {Utils} from "../utils/Utils";
 import {HexTemplate} from "../gen/HexTemplate";
 import {Facade} from "../Facade";
+import seedrandom = require("seedrandom")
 
 export class LandscapeGenerator {
 
   private static readonly weights: number[] = [0.3, 0.15, 0.2, 0.15, 0.1, 0.1]
 
-  static weightedRandomLayout(width: number, height: number): HexTemplate[] {
+  static weightedRandomLayout(seed: string, width: number, height: number): HexTemplate[] {
+    const rngSeq = seedrandom(seed, {global: false})
     const result = []
     const strVariations = Utils.getEnumOptionsStr(HexTemplate.Values)
     const variations = Utils.getEnumOptions(HexTemplate.Values)
@@ -26,6 +28,6 @@ export class LandscapeGenerator {
         }
     })
 
-    return result.sort((a, b) => -1 + Math.random() * 2)
+    return result.sort((a, b) => -1 + rngSeq() * 2)
   }
 }

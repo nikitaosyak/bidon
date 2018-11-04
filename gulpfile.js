@@ -18,8 +18,7 @@ gulp.task('connect', () => {
 
 gulp.task('prepare-build-directory', () => {
   if (fs.existsSync('build')) {
-    return gulp.src('build/*', {read: false})
-      .pipe(require('gulp-rimraf')({force: true}))
+    require('rimraf').sync('build/', {force: true})
   } else {
     fs.mkdirSync('build/')
   }

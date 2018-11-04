@@ -1,7 +1,7 @@
 import {Renderer} from "./Renderer";
 import {Resizer} from "./Resizer";
 import {Emitter, Events} from "./events";
-import {applyMixins, IUpdatable, VisualHex} from "./mixins";
+import {applyMixins, IUpdatable, Visual} from "./mixins";
 import {Utils} from "./utils/Utils";
 import {CDB} from "./gen/CDB";
 import {Assets} from "./utils/Assets";
@@ -13,7 +13,7 @@ export class Facade implements Emitter, IUpdatable {
 
     applyMixins(Facade, [Emitter])
     applyMixins(Resizer, [Emitter])
-    applyMixins(Hexagon, [VisualHex])
+    applyMixins(Hexagon, [Visual])
 
     this._resizer = new Resizer()
     this._renderer = new Renderer()

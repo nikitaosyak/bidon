@@ -10,7 +10,7 @@ export class Grid {
   private group: THREE.Group
 
   constructor(width: number, height: number) {
-    const layout = LandscapeGenerator.weightedRandomLayout(width, height)
+    const layout = LandscapeGenerator.weightedRandomLayout('oi hello', width, height)
     GridUtils.init(
       width,
       height,

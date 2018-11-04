@@ -71,6 +71,7 @@ export type HEXCOLOR = string
 
 export function intToRGB(value: number): HEXCOLOR { 
   const hex = Number(value).toString(16);
+  if (hex === '0') return '#000000'
   return hex.length < 2 ? \`#0\${hex}\` : \`#\${hex}\`;
 }
 
