@@ -7,7 +7,7 @@ import {Hexagon} from "./Hexagon";
 export class Grid {
 
   private map: Hexagon[]
-  private group: THREE.Group
+  private _group: THREE.Group; public get group() { return this._group }
 
   constructor(width: number, height: number) {
     const layout = LandscapeGenerator.weightedRandomLayout('oi hello', width, height)
@@ -19,19 +19,17 @@ export class Grid {
     )
 
     this.map = []
-    this.group = new THREE.Group()
+    this._group = new THREE.Group()
 
     for (let r = 0; r < height; r++) {
       for (let q = 0; q < width; q++) {
         const h = new Hexagon(q, r, layout[r * width + q])
-        this.group.add(h.visual)
+        this._group.add(h.visual)
       }
     }
 
-    this.group.position.setY(((height-1)*1.5)/2)
-    Facade.$.renderer.scene.add(this.group)
-
-    console.log(GridUtils.angle * 180/Math.PI, GridUtils.radius)
+    this._group.position.setY(((height-1)*1.5)/2)
+    Facade.$.renderer.scene.add(this._group)
   }
 
 }

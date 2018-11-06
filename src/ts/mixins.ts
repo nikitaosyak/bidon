@@ -12,6 +12,7 @@ export class Visual {
   visual: Mesh
   setVisual(v: Mesh) {
     this.visual = v
+    this.visual['self'] = this
   }
 }
 

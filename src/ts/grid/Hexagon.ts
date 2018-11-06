@@ -1,6 +1,6 @@
 import {HexTemplate} from "../gen/HexTemplate";
 import {Visual} from "../mixins";
-import {Mesh, MeshLambertMaterial, MeshPhongMaterial, MeshStandardMaterial} from "three";
+import {Mesh, MeshPhongMaterial} from "three";
 import {Assets} from "../utils/Assets";
 import {GridUtils} from "./GridUtils";
 
@@ -19,7 +19,6 @@ export class Hexagon implements Visual {
     this.setVisual(new Mesh(meshTemplate.geometry.clone(), new MeshPhongMaterial({
       color: template.visualMarker,
     })))
-    this.visual.material['color'].set()
 
     const myAngle = r * GridUtils.angle/2 + GridUtils.angle * q
     this.visual.position.set(
@@ -28,6 +27,15 @@ export class Hexagon implements Visual {
       Math.sin(myAngle) * GridUtils.radius
     )
     this.visual.rotateY(-myAngle)
+  }
+
+  public select():void {
+    console.log(this.q, this.r)
+    this.visual.material['color'].set(0xAFAF00)
+  }
+
+  public deselect():void {
+    this.visual.material['color'].set(this.template.visualMarker)
   }
 
   visual: Mesh;

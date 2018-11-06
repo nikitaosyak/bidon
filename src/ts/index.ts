@@ -1,7 +1,8 @@
 import {Facade} from "./Facade";
 import {Events} from "./events";
 import {Grid} from "./grid/Grid";
-import Stats = require('Stats.js')      // MACRO: prod-cutout
+import Stats = require('Stats.js')
+import {GridInput} from "./grid/GridInput";      // MACRO: prod-cutout
 
 window.onload = () => {
 
@@ -18,6 +19,7 @@ window.onload = () => {
 
   Facade.$.on(Events.ASSETS_LOAD_COMPLETE, () => {
     gameLoop()
-    new Grid(12, 8)
+    const grid = new Grid(12, 8)
+    const input = new GridInput(grid)
   })
 }
