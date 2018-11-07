@@ -16,7 +16,6 @@ export class Resizer implements Emitter, IUpdatable {
     const h = document.documentElement.clientHeight
 
     if (this._width !== w || this._height !== h) {
-      console.log('resize')
       this._width = w; this._height = h
       this._ar = this._width / this._height
       this.emit(Events.RESIZE)

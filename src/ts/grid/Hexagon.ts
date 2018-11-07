@@ -2,17 +2,16 @@ import {HexTemplate} from "../gen/HexTemplate";
 import {Visual} from "../mixins";
 import {Mesh, MeshPhongMaterial} from "three";
 import {Assets} from "../utils/Assets";
-import {GridUtils} from "./GridUtils";
+import {Axial, GridUtils} from "./GridUtils";
 
 export class Hexagon implements Visual {
 
-  private q: number
-  private r: number
+  private pos: Axial; public get location() { return this.pos }
   private template: HexTemplate
 
   constructor(q: number, r: number, template:HexTemplate) {
-    this.q = q
-    this.r = r
+    this.pos = new Axial().set(q, r)
+
     this.template = template
 
     const meshTemplate = Assets.getAsset<Mesh>('hex')
@@ -30,8 +29,11 @@ export class Hexagon implements Visual {
   }
 
   public select():void {
-    console.log(this.q, this.r)
     this.visual.material['color'].set(0xAFAF00)
+  }
+
+  public selectAsNeighbour(): void {
+    this.visual.material['color'].set(0xAf00Af)
   }
 
   public deselect():void {

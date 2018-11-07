@@ -9,8 +9,6 @@ export class GridInput {
   private grid: Grid
   private caster: Raycaster
 
-  private currentSelection: Hexagon
-
   constructor(grid: Grid) {
     this.grid = grid
     this.dom = document.getElementById('canvas') as HTMLCanvasElement
@@ -23,7 +21,7 @@ export class GridInput {
     const normalizeY = v => -(v/window.innerHeight) * 2 + 1
     const selectHex = (e:MouseEvent|TouchEvent) => {
       started = false
-      if (moved) return
+      if (moved) { moved = false; return }
 
       e.preventDefault()
       let coords = null
@@ -47,11 +45,8 @@ export class GridInput {
       if (intersects.length <= 0) return
       const target:Hexagon = <Hexagon>intersects[0].object['self']
       if (target) {
-        if (this.currentSelection) {
-          this.currentSelection.deselect()
-        }
-        this.currentSelection = target
-        this.currentSelection.select()
+        grid.selectSingle(target.location)//selectNeighbours(target.location)
+        grid.selectNeighbours(target.location)
       } else {
         console.warn('unknown object intersection!', intersects[0])
       }
