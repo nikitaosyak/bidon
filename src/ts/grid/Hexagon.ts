@@ -2,15 +2,15 @@ import {HexTemplate} from "../gen/HexTemplate";
 import {Visual} from "../mixins";
 import {Mesh, MeshPhongMaterial} from "three";
 import {Assets} from "../utils/Assets";
-import {Axial, GridUtils} from "./GridUtils";
+import {Coord, GridUtils} from "./GridUtils";
 
 export class Hexagon implements Visual {
 
-  private pos: Axial; public get location() { return this.pos }
+  private pos: Coord; public get location() { return this.pos }
   private template: HexTemplate
 
   constructor(q: number, r: number, template:HexTemplate) {
-    this.pos = new Axial().set(q, r)
+    this.pos = new Coord().set(q, r)
 
     this.template = template
 

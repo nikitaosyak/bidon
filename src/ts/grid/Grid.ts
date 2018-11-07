@@ -1,6 +1,6 @@
 import {LandscapeGenerator} from "./LandscapeGenerator";
 import THREE = require("three");
-import {Axial, GridUtils} from "./GridUtils";
+import {Coord, GridUtils} from "./GridUtils";
 import {Facade} from "../Facade";
 import {Hexagon} from "./Hexagon";
 
@@ -33,28 +33,21 @@ export class Grid {
     Facade.$.renderer.scene.add(this._group)
   }
 
-  public selectSingle(target:Axial) {
+  public selectSingle(target:Coord) {
     this.map.forEach(h => h.deselect())
 
-    this.map[GridUtils.axialToIndex(target)].select()
+    this.map[GridUtils.coordToIndex(target)].select()
   }
 
-  private directions = [
-    new Axial().set(1, 0), new Axial().set(1, -1), new Axial().set(0, -1),
-    new Axial().set(-1, 0), new Axial().set(-1, 1), new Axial().set(0, 1)
-  ]
-  public selectNeighbours(target:Axial) {
+  public selectNeighbours(target:Coord) {
     this.map.forEach(h => h.deselect())
 
-    this.directions.forEach(d => {
-      const lookupR = GridUtils.warpR(d.r + target.r)
-      if (Number.isNaN(lookupR)) return
-      const lookupQ = GridUtils.warpQ(d.q + target.q)
-      this.map[GridUtils.axialToIndex(new Axial().set(lookupQ, lookupR))].selectAsNeighbour()
+    GridUtils.getNeighbours(target).forEach(n => {
+      this.map[GridUtils.coordToIndex(n)].selectAsNeighbour()
     })
   }
 
-  public drawLine(target:Axial) {
+  public drawLine(target:Coord) {
 
   }
 }

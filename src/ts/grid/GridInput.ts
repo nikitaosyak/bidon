@@ -45,7 +45,7 @@ export class GridInput {
       if (intersects.length <= 0) return
       const target:Hexagon = <Hexagon>intersects[0].object['self']
       if (target) {
-        grid.selectSingle(target.location)//selectNeighbours(target.location)
+        // grid.selectSingle(target.location)//selectNeighbours(target.location)
         grid.selectNeighbours(target.location)
       } else {
         console.warn('unknown object intersection!', intersects[0])
