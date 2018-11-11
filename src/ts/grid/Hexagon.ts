@@ -10,7 +10,6 @@ export class Hexagon implements Visual {
   private _template: HexTemplate; public get template() { return this._template }
 
   public visited: boolean = false
-  public visible: boolean = false
 
   constructor(q: number, r: number, template:HexTemplate) {
     this.pos = new Coord(q, r)
@@ -39,8 +38,15 @@ export class Hexagon implements Visual {
     this.visual.material['color'].set(0xAf00Af)
   }
 
+  public setReachable(v: boolean) {
+    this.visited = true
+    if (v) {
+      this.visual.material['color'].set(0x00AfAf)
+    }
+  }
+
   public deselect():void {
-    this.visible = this.visited = false
+    this.visited = false
     this.visual.material['color'].set(this._template.visualMarker)
   }
 

@@ -1,8 +1,10 @@
 import {LandscapeGenerator} from "./LandscapeGenerator";
-import THREE = require("three");
 import {Coord, GridUtils} from "./GridUtils";
 import {Facade} from "../Facade";
 import {Hexagon} from "./Hexagon";
+import {HexTemplate} from "../gen/HexTemplate";
+import THREE = require("three");
+import Modifiers = HexTemplate.Modifiers;
 
 export class Grid {
 
@@ -58,18 +60,29 @@ export class Grid {
     })
   }
 
-  public drawVisibility(center:Coord) {
+  private breadthFirstSearch(center:Coord, depth: number, flag:number) {
+
+  }
+
+  public drawReach(center:Coord) {
     this.map.forEach(h => h.deselect())
-
-    this.getH(center).visited = this.getH(center).visible = true
-    const result = [center]
-    const iterate = (result, center, currentNeighbours) => {
-      const nextNeighbours = []
-      currentNeighbours.forEach(n => {
-
+    // breadth first search implementation
+    let depth = 3
+    let queue = [center]
+    while (depth --> 0) {
+      let newQueue = []
+      queue.forEach(q => {
+        const qHex = this.getH(q)
+        if (qHex.visited) return
+        const reachable = qHex.template.modifiers&Modifiers.WALKABLE
+        if (reachable) {
+          newQueue = newQueue.concat(GridUtils.getNeighbours(q))
+          qHex.setReachable(true)
+        } else {
+          qHex.setReachable(false)
+        }
       })
+      queue = newQueue
     }
-    iterate(result, center, GridUtils.getNeighbours(center))
-    return result
   }
 }
