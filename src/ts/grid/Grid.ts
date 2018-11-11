@@ -9,6 +9,8 @@ export class Grid {
   private map: Hexagon[]
   private readonly _group: THREE.Group; public get group() { return this._group }
 
+  public getH(c: Coord) : Hexagon { return this.map[GridUtils.coordToIndex(c)] }
+
   constructor(width: number, height: number) {
     const layout = LandscapeGenerator.weightedRandomLayout('oн hello', width, height)
     GridUtils.init(
@@ -54,5 +56,20 @@ export class Grid {
     line.forEach(ln => {
       this.map[GridUtils.coordToIndex(ln)].select()
     })
+  }
+
+  public drawVisibility(center:Coord) {
+    this.map.forEach(h => h.deselect())
+
+    this.getH(center).visited = this.getH(center).visible = true
+    const result = [center]
+    const iterate = (result, center, currentNeighbours) => {
+      const nextNeighbours = []
+      currentNeighbours.forEach(n => {
+
+      })
+    }
+    iterate(result, center, GridUtils.getNeighbours(center))
+    return result
   }
 }

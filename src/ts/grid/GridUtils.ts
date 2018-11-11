@@ -154,6 +154,10 @@ export class GridUtils {
     return result
   }
 
+  // public static accessSpace(center: Coord, range: number) {
+  //
+  // }
+
   // public static lerp(a, b, t) { return a + (b-a) * t }
 
   // public static distance(a: Cubic, b: Cubic) {

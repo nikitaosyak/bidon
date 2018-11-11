@@ -5,7 +5,7 @@ import seedrandom = require("seedrandom")
 
 export class LandscapeGenerator {
 
-  private static readonly weights: number[] = [0.7, 0.00, 0.00, 0.00, 0.00, 0.3]
+  private static readonly weights: number[] = [0.7, 0.00, 0.00, 0.00, 0.3, 0.0]
 
   static weightedRandomLayout(seed: string, width: number, height: number): HexTemplate[] {
     const rngSeq = seedrandom(seed, {global: false})

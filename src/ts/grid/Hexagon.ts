@@ -7,12 +7,15 @@ import {Coord, GridUtils} from "./GridUtils";
 export class Hexagon implements Visual {
 
   private pos: Coord; public get location() { return this.pos }
-  private template: HexTemplate
+  private _template: HexTemplate; public get template() { return this._template }
+
+  public visited: boolean = false
+  public visible: boolean = false
 
   constructor(q: number, r: number, template:HexTemplate) {
     this.pos = new Coord(q, r)
 
-    this.template = template
+    this._template = template
 
     const meshTemplate = Assets.getAsset<Mesh>('hex')
     this.setVisual(new Mesh(meshTemplate.geometry.clone(), new MeshPhongMaterial({
@@ -37,7 +40,8 @@ export class Hexagon implements Visual {
   }
 
   public deselect():void {
-    this.visual.material['color'].set(this.template.visualMarker)
+    this.visible = this.visited = false
+    this.visual.material['color'].set(this._template.visualMarker)
   }
 
   visual: Mesh;
