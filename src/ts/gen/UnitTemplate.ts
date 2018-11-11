@@ -30,6 +30,7 @@ export module UnitTemplate {
     ZERG
   }
 
+
   export enum Values {
     marine,
     medic,

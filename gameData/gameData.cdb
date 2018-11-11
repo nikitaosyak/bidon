@@ -130,9 +130,8 @@
 					"display": null
 				},
 				{
-					"typeStr": "5:WALKABLE,NONWALKABLE",
-					"name": "modifier",
-					"display": null
+					"typeStr": "10:OBSTRUCTING,NONOBSTRUCTING,WALKABLE,NONWALKABLE",
+					"name": "modifiers"
 				}
 			],
 			"lines": [
@@ -142,7 +141,7 @@
 					"element": [
 						0
 					],
-					"modifier": 0
+					"modifiers": 6
 				},
 				{
 					"id": "waterTile",
@@ -150,7 +149,7 @@
 					"element": [
 						1
 					],
-					"modifier": 0
+					"modifiers": 6
 				},
 				{
 					"id": "airTile",
@@ -158,31 +157,31 @@
 					"element": [
 						2
 					],
-					"modifier": 0
+					"modifiers": 6
 				},
 				{
 					"id": "groundTile",
 					"visualMarker": 8469553,
-					"modifier": 0,
 					"element": [
 						2
-					]
+					],
+					"modifiers": 6
 				},
 				{
 					"id": "mountainTile",
 					"visualMarker": 13092550,
-					"modifier": 1,
 					"element": [
 						4
-					]
+					],
+					"modifiers": 9
 				},
 				{
 					"id": "voidTile",
 					"visualMarker": 0,
-					"modifier": 1,
 					"element": [
 						4
-					]
+					],
+					"modifiers": 10
 				}
 			],
 			"separators": [],

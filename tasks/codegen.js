@@ -9,7 +9,8 @@ const getColumnType = (gameData, sheet, column) => {
     case '2' : return 'boolean'
     case '3' :
     case '4' : return 'number'
-    case '5' : return `${sheet.name}.${capitalize(column.name)}`
+    case '5' :
+    case '10': return `${sheet.name}.${capitalize(column.name)}`
     case '6':
     case '9': return getRefType(column.typeStr)
 
@@ -37,6 +38,7 @@ const getColumnCast = (gameData, sheet, column, v) => {
     case '7' : return `${v} /*TODO: image type is unsupported*/`
     case '8' : return `${v} /*TODO: check array type support*/`
     case '9' : return `${v}[0] as ${getColumnType(gameData, sheet, column)}`
+    case '10': return `${v} as number`
     case '11': return `intToRGB(${v})`
     default  : return 'UNKNOWN TYPE'
   }
@@ -85,18 +87,20 @@ ${allEnums}
     gameData.sheets
       .filter(s => !/^.*@.*$/.test(s.name))
       .forEach(sheet => {
-        const classEnums = sheet.columns
-          .filter(column => column.typeStr[0] === '5')
+        let classEnums = sheet.columns
+          .filter(column => {
+            if (getTypeId(column.typeStr) === '5') return true
+            if (getTypeId(column.typeStr) === '10') return true
+          })
           .map(column => {
-            const options = column.typeStr.split(':')[1].split(',').map(o => `    ${o}`)
+            let options = column.typeStr.split(':')[1].split(',')
+            if (getTypeId(column.typeStr) === '5') options = options.map(o => `    ${o}`)
+            if (getTypeId(column.typeStr) === '10') options = options.map((o, i) => `    ${o} = ${Math.pow(2, i)}`)
             return `  export enum ${capitalize(column.name)} {\n${options.join(',\n')}\n  }`
           }).join('\n')
+            // const bitOptions =
+            // return `  export enum ${capitalize(column.name)} {\n${bitOptions.join(',\n')}\n  }`
         let imports = []
-        // if (classEnums.length > 0) {
-        //   imports = sheet.columns
-        //     .filter(column => column.typeStr[0] === '5')
-        //     .map(column => `  import ${capitalize(column.name)} = ${sheet.name}.${capitalize(column.name)}`)
-        // }
         const fieldStore = sheet.columns.map(col => [decapitalize(col.name), getColumnType(gameData, sheet, col)])
         const fields = fieldStore.map(f => `  public readonly ${f[0]}: ${f[1]}`).join('\n')
         const assign = fieldStore.map((f, i) => {
@@ -118,8 +122,7 @@ ${assign}
 }
 
 export module ${sheet.name} {
-
-${classEnums}
+${classEnums.length > 0 ? '\n' + classEnums + '\n' : ''}
 
 ${valuesEnum}
 
