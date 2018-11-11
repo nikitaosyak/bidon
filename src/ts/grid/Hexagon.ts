@@ -10,7 +10,7 @@ export class Hexagon implements Visual {
   private template: HexTemplate
 
   constructor(q: number, r: number, template:HexTemplate) {
-    this.pos = new Coord().set(q, r)
+    this.pos = new Coord(q, r)
 
     this.template = template
 

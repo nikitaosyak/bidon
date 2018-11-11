@@ -10,7 +10,7 @@ export class Grid {
   private readonly _group: THREE.Group; public get group() { return this._group }
 
   constructor(width: number, height: number) {
-    const layout = LandscapeGenerator.weightedRandomLayout('oi hello', width, height)
+    const layout = LandscapeGenerator.weightedRandomLayout('oн hello', width, height)
     GridUtils.init(
       width,
       height,
@@ -47,7 +47,12 @@ export class Grid {
     })
   }
 
-  public drawLine(target:Coord) {
+  public drawLine(from:Coord, target:Coord) {
+    this.map.forEach(h => h.deselect())
 
+    const line = GridUtils.line(from, target)
+    line.forEach(ln => {
+      this.map[GridUtils.coordToIndex(ln)].select()
+    })
   }
 }

@@ -2,6 +2,7 @@ import {Grid} from "./Grid";
 import {Raycaster} from "three";
 import {Facade} from "../Facade";
 import {Hexagon} from "./Hexagon";
+import {Coord} from "./GridUtils";
 
 export class GridInput {
 
@@ -46,7 +47,9 @@ export class GridInput {
       const target:Hexagon = <Hexagon>intersects[0].object['self']
       if (target) {
         // grid.selectSingle(target.location)//selectNeighbours(target.location)
-        grid.selectNeighbours(target.location)
+        // grid.selectNeighbours(target.location)
+        // console.log(GridUtils.distance(target.location, new Coord(0, 0)))
+        grid.drawLine(new Coord(11, 2), target.location)
       } else {
         console.warn('unknown object intersection!', intersects[0])
       }
