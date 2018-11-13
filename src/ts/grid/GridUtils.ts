@@ -23,6 +23,10 @@ export class Coord {
 
   public clone(): Coord { return new Coord(this.q, this.r) }
 
+  public equals(v: Coord): boolean {
+    return this._q === v.q && this._r === v.r
+  }
+
   toString() { return `[${this._q}:${this._r}]` }
 
   private static pool: Coord[] = []
@@ -76,10 +80,6 @@ export class GridUtils {
       result.push(Coord.getOne().set(lookupQ, lookupR))
     })
     return result
-  }
-
-  private static warp(a:Coord, b:Coord) {
-
   }
 
   public static warpedDistance(a: Coord, b: Coord) : {a: Coord, b: Coord, d: number} {
@@ -141,9 +141,11 @@ export class GridUtils {
     return v.set(rx, rz)
   }
 
-  public static line(a: Coord, b: Coord) {
+  public static line(a: Coord, b: Coord): Coord[] {
     const wDist = this.warpedDistance(a, b)
     const _a = wDist.a, _b = wDist.b, d = wDist.d
+
+    if (d === 0) return [a.clone()]
 
     const result = []
     for (let i = 0; i <= d; i++) {
@@ -154,30 +156,18 @@ export class GridUtils {
     return result
   }
 
-  // public static accessSpace(center: Coord, range: number) {
-  //
-  // }
-
-  // public static lerp(a, b, t) { return a + (b-a) * t }
-
-  // public static distance(a: Cubic, b: Cubic) {
-  //   return (Math.abs(a.x - b.x) + Math.abs(a.y - b.y) + Math.abs(a.z - b.z)) / 2
-  // }
-
-  // public static lerpCube(a: Cubic, b: Cubic, t: number) {
-  //   return new Cubic().set(
-  //     this.lerp(a.x, b.x, t),
-  //     this.lerp(a.y, b.y, t),
-  //     this.lerp(a.z, b.z, t),
-  //   )
-  // }
-
-  // public static line(a: Cubic, b: Cubic): Cubic[] {
-  //   const len = this.distance(a, b)
-  //   const result = []
-  //   for (let i = 0; i < len; i++) {
-  //     result.push()
-  //   }
-  //   return result
-  // }
+  public static range(center: Coord, range: number): Coord[] {
+    const result = []
+    for (let x = center.x-range; x <= center.x+range; x++) {
+      for (let y = center.y-range; y<=center.y+range; y++) {
+        for (let z = center.z-range; z <= center.z+range; z++) {
+          if (x + y + z !== 0) continue
+          if (z < 0) continue
+          if (z >= this._height) continue
+          result.push(new Coord(this._warpQ(x), z))
+        }
+      }
+    }
+    return result
+  }
 }

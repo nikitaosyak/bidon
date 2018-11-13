@@ -60,10 +60,6 @@ export class Grid {
     })
   }
 
-  private breadthFirstSearch(center:Coord, depth: number, flag:number) {
-
-  }
-
   public drawReach(center:Coord) {
     this.map.forEach(h => h.deselect())
     // breadth first search implementation
@@ -84,5 +80,24 @@ export class Grid {
       })
       queue = newQueue
     }
+  }
+
+  public drawVisibility(center:Coord) {
+    this.map.forEach(h => h.deselect())
+
+    const range = GridUtils.range(center, 3)
+    range.forEach(c => {
+      let line = GridUtils.line(center, c)
+      if (line[line.length-1].equals(center)) line = line.reverse()
+      let i = 0, h = this.getH(line[i])
+      while ((h.template.modifiers&Modifiers.NONOBSTRUCTING) > 0) {
+        h.select()
+        if (i < line.length) {
+          h = this.getH(line[i])
+          i++
+        }
+        else break
+      }
+    })
   }
 }
