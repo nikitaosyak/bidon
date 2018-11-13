@@ -50,7 +50,8 @@ export class GridInput {
         // grid.selectNeighbours(target.location)
         // console.log(GridUtils.distance(target.location, new Coord(0, 0)))
         // grid.drawLine(new Coord(11, 2), target.location)
-        grid.drawVisibility(target.location)
+        // grid.drawVisibility(target.location)
+        grid.drawPath(new Coord(0, 0), target.location)
       } else {
         console.warn('unknown object intersection!', intersects[0])
       }

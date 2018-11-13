@@ -71,7 +71,7 @@ export class GridUtils {
 
   public static coordToIndex(v: Coord) { return v.r * this._width + v.q }
 
-  public static getNeighbours(around: Coord) {
+  public static getNeighbours(around: Coord) : Coord[] {
     const result = []
     this._dirs.forEach(d => {
       const lookupR = this._warpR(around.r + d.r)

@@ -3,6 +3,7 @@ import {Coord, GridUtils} from "./GridUtils";
 import {Facade} from "../Facade";
 import {Hexagon} from "./Hexagon";
 import {HexTemplate} from "../gen/HexTemplate";
+import {PriorityQueue} from "../utils/PriorityQueue";
 import THREE = require("three");
 import Modifiers = HexTemplate.Modifiers;
 
@@ -98,6 +99,64 @@ export class Grid {
         }
         else break
       }
+    })
+  }
+
+  public findPath(from:Coord, to: Coord): Coord[] {
+    this.map.forEach(h => h.visited = false)
+
+    const frontier = new PriorityQueue<Coord>()//GridUtils.getNeighbours(from)
+    frontier.put(from, 0)
+    const path = []
+    path[GridUtils.coordToIndex(from)] = null
+    const cost = []
+    cost[GridUtils.coordToIndex(from)] = 0
+    // this.getH(from).select()
+    // this.getH(from).visited = true
+    const result = []
+
+    while (frontier.length > 0) {
+      const current = frontier.get()
+
+      if (current.equals(to)) {
+        const reverseAddToPath = point => {
+          const stepIndex = path[GridUtils.coordToIndex(point)]
+          if (stepIndex === null) return
+          const step = this.map[stepIndex].location
+          result.unshift(step)
+
+          if (step.equals(from)) return
+          reverseAddToPath(step)
+        }
+        result.unshift(current)
+        reverseAddToPath(current)
+        break
+      }
+
+      GridUtils.getNeighbours(current).forEach(next => {
+        const nextIdx = GridUtils.coordToIndex(next)
+        const currentIdx = GridUtils.coordToIndex(current)
+        const singleCost = this.getH(next).template.modifiers & Modifiers.NONOBSTRUCTING ? 1 : 1000
+        const nextCost = cost[currentIdx] + singleCost
+        // console.log(cost, nextIdx)
+        if (!(nextIdx in cost) || nextCost < cost[nextIdx]) {
+          cost[nextIdx] = nextCost
+          const priority = nextCost + GridUtils.warpedDistance(to, next).d
+          frontier.put(next, priority)
+          path[GridUtils.coordToIndex(next)] = currentIdx
+        }
+      })
+    }
+
+    return result
+  }
+
+  public drawPath(from: Coord, to: Coord) {
+    this.map.forEach(h => h.deselect())
+
+    const path = this.findPath(from, to)
+    path.forEach(p => {
+      this.getH(p).select()
     })
   }
 }
