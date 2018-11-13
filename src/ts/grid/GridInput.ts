@@ -26,15 +26,15 @@ export class GridInput {
 
       e.preventDefault()
       let coords = null
-      if (<MouseEvent>e) {
+      if (e instanceof MouseEvent) {
         coords = {
           x: normalizeX((<MouseEvent>e).clientX),
           y: normalizeY((<MouseEvent>e).clientY)
         }
-      } else if (<TouchEvent>e) {
+      } else if (e instanceof TouchEvent) {
         coords = {
-          x: normalizeX((<TouchEvent>e).touches[0].clientX),
-          y: normalizeY((<TouchEvent>e).touches[0].clientY)
+          x: normalizeX((<TouchEvent>e).changedTouches[0].clientX),
+          y: normalizeY((<TouchEvent>e).changedTouches[0].clientY)
         }
       } else {
         throw 'Unknown type of event: ' + typeof e

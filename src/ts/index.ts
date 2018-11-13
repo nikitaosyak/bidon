@@ -19,7 +19,7 @@ window.onload = () => {
 
   Facade.$.on(Events.ASSETS_LOAD_COMPLETE, () => {
     gameLoop()
-    const grid = new Grid(12, 8)
+    const grid = new Grid(15, 9)
     const input = new GridInput(grid)
   })
 }
