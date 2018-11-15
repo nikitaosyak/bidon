@@ -1,10 +1,11 @@
 import {Grid} from "./Grid";
-import {Raycaster} from "three";
+import {Cache, Raycaster} from "three";
 import {Facade} from "../Facade";
 import {Hexagon} from "./Hexagon";
 import {Unit} from "../unit/Unit";
-import {GridUtils} from "./GridUtils";
+import {Coord, GridUtils} from "./GridUtils";
 import {HexTemplate} from "../gen/HexTemplate";
+import {TweenLite} from 'gsap'
 
 export class GridInput {
 
@@ -13,6 +14,8 @@ export class GridInput {
   private caster: Raycaster
 
   private current: Unit = null
+
+  private enabled = true
 
   constructor(grid: Grid) {
     this.grid = grid
@@ -49,6 +52,7 @@ export class GridInput {
     }
 
     const selectHex = (e:MouseEvent|TouchEvent) => {
+      if (!this.enabled) return
       started = false
       if (moved) { moved = false; return }
 
@@ -58,13 +62,34 @@ export class GridInput {
       if (!target) return
       const targetUnit = grid.getU(target.location)
       if (!targetUnit && this.current) {
-        console.log('moving somewhere')
       } else if (targetUnit && targetUnit !== this.current) {
-        console.log('selecting new unit')
         this.current = null
       }
       if (this.current) {
-
+        console.log('moving somewhere')
+        const path = grid.findPath(target.location, this.current.location).reverse()
+        if (target.template.modifiers & HexTemplate.Modifiers.WALKABLE &&
+            path.length <= 3) {
+          this.enabled = false
+          const goOneStep = (to: Coord) => {
+            TweenLite.to(this.current.visual.position, 0.3, Object.assign({
+              onComplete: () => {
+                grid.moveUnitInternal(this.current, to)
+                this.grid.deselectAll()
+                grid.redrawVisibility()
+                if (path.length > 0) {
+                  goOneStep(path.splice(0, 1)[0])
+                } else {
+                  this.enabled = true
+                  this.grid.deselectAll()
+                  grid.redrawVisibility()
+                  grid.drawReach(this.current.location)
+                }
+              }
+            }, GridUtils.getSpaceFromCoord(to)))
+          }
+          goOneStep(path.splice(0, 1)[0])
+        }
       } else {
         if (targetUnit) {
           this.current = targetUnit
@@ -75,8 +100,12 @@ export class GridInput {
       }
     }
 
-    const onStart = () => started = true
+    const onStart = () => {
+      if (!this.enabled) return
+      started = true
+    }
     const onMove = e => {
+      if (!this.enabled) return
       started ? moved = true : moved = false
       if (moved) return
       if (!this.current) return

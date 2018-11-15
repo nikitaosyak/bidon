@@ -60,6 +60,12 @@ export class Grid {
     this._group.add(v.visual)
   }
 
+  public moveUnitInternal(v: Unit, to: Coord) : void {
+    this._units[GridUtils.coordToIndex(v.location)] = null
+    this._units[GridUtils.coordToIndex(to)] = v
+    v.location = to
+  }
+
   // public selectSingle(target:Coord) {
   //   this._map.forEach(h => h.deselect())
   //

@@ -81,6 +81,13 @@ export class GridUtils {
       Math.sin(myAngle) * GridUtils.radius)
   }
 
+  public static getSpaceFromCoord(v: Coord) : Vector3 {
+    const myAngle = this.spaceAngleFromCoord(v)
+    return new Vector3(Math.cos(myAngle) * GridUtils.radius,
+      -v.r * 1.5,
+      Math.sin(myAngle) * GridUtils.radius)
+  }
+
   public static coordToIndex(v: Coord) { return v.r * this._width + v.q }
 
   public static getNeighbours(around: Coord) : Coord[] {

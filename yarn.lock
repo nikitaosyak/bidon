@@ -21,6 +21,11 @@
     normalize-path "^2.0.1"
     through2 "^2.0.3"
 
+"@types/gsap@^1.20.0":
+  version "1.20.0"
+  resolved "https://registry.yarnpkg.com/@types/gsap/-/gsap-1.20.0.tgz#131c3ce39d7e18c0278285ec58a1eb216936de59"
+  integrity sha512-kTIjuQWP5ot1kfX0lZ0lxc7VNTB7CDg9oMJPubS9UGM5e7uZ9rFj/0hvZoQjFk0u69T2pcOOsviA+vRhlV8SMA==
+
 "@types/seedrandom@^2.4.27":
   version "2.4.27"
   resolved "https://registry.yarnpkg.com/@types/seedrandom/-/seedrandom-2.4.27.tgz#9db563937dd86915f69092bc43259d2f48578e41"
@@ -1880,6 +1885,11 @@ graceful-fs@~1.2.0:
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-1.2.3.tgz#15a4806a57547cb2d2dbf27f42e89a8c3451b364"
   integrity sha1-FaSAaldUfLLS2/J/QuiajDRRs2Q=
+
+gsap@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/gsap/-/gsap-2.0.2.tgz#c82bde9a078f7922869fc2eb5aaecfa7592d1c2b"
+  integrity sha512-WyT0uuDNb+5xMccx4SsVcI1CwvIL0BPgP8TyJJmMWT/btGXUNtKesnkXFMMshYs37renFhDo1P5NEoizeonviQ==
 
 gulp-concat@^2.6.1:
   version "2.6.1"

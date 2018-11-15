@@ -5,6 +5,7 @@
   "author": "nikitka",
   "license": "MIT",
   "devDependencies": {
+    "@types/gsap": "^1.20.0",
     "@types/seedrandom": "^2.4.27",
     "@types/three": "^0.93.4",
     "@types/tinycolor": "^1.1.27",
@@ -25,6 +26,7 @@
   },
   "dependencies": {
     "@xailabs/three-renderer-stats": "^1.0.4",
+    "gsap": "^2.0.2",
     "seedrandom": "^2.4.4",
     "stats.js": "^0.17.0",
     "three": "^0.97.0",
