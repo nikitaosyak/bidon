@@ -1,18 +1,25 @@
 import {LandscapeGenerator} from "./LandscapeGenerator";
 import {Coord, GridUtils} from "./GridUtils";
 import {Facade} from "../Facade";
-import {Hexagon} from "./Hexagon";
+import {Hexagon, HighlightMode} from "./Hexagon";
 import {HexTemplate} from "../gen/HexTemplate";
 import {PriorityQueue} from "../utils/PriorityQueue";
-import THREE = require("three");
+import {Unit} from "../unit/Unit";
+import {Group, Mesh} from "three";
 import Modifiers = HexTemplate.Modifiers;
 
 export class Grid {
 
-  private map: Hexagon[]
-  private readonly _group: THREE.Group; public get group() { return this._group }
+  private _map: Hexagon[]; public get map() { return this._map }
+  private readonly _group: Group; public get group() { return this._group }
 
-  public getH(c: Coord) : Hexagon { return this.map[GridUtils.coordToIndex(c)] }
+  private readonly _intersectGroup: Mesh[]; public get intersectGroup() { return this._intersectGroup }
+
+  private _units: Unit[]; public get units() { return this._units };
+  public getU(c: Coord) : Unit { return this._units[GridUtils.coordToIndex(c)] }
+  public getH(c: Coord) : Hexagon { return this._map[GridUtils.coordToIndex(c)] }
+
+  private dirty = true; public setDirty() { this.dirty = true }
 
   constructor(width: number, height: number) {
     const layout = LandscapeGenerator.weightedRandomLayout('oн hello', width, height)
@@ -23,14 +30,17 @@ export class Grid {
       1.7 / (2*Math.tan(Math.PI/width))
     )
 
-    this.map = []
-    this._group = new THREE.Group()
+    this._map = []
+    this._units = []
+    this._group = new Group()
+    this._intersectGroup = []
 
     for (let r = 0; r < height; r++) {
       for (let q = 0; q < width; q++) {
         const h = new Hexagon(q, r, layout[r * width + q])
-        this.map.push(h)
+        this._map.push(h)
         this._group.add(h.visual)
+        this._intersectGroup.push(h.visual)
       }
     }
 
@@ -38,31 +48,45 @@ export class Grid {
     Facade.$.renderer.scene.add(this._group)
   }
 
-  public selectSingle(target:Coord) {
-    this.map.forEach(h => h.deselect())
-
-    this.map[GridUtils.coordToIndex(target)].select()
+  public addUnit(v: Unit, c: Coord): void {
+    if (this._units.indexOf(v) > -1) {
+      console.warn(`trying to add unit ${v}, but it's already on grid`)
+      return
+    }
+    v.location = c
+    this._units[GridUtils.coordToIndex(c)] = v
+    GridUtils.setSpaceFromCoord(v.visual.position, c)
+    v.visual.rotateY(-GridUtils.spaceAngleFromCoord(c))
+    this._group.add(v.visual)
   }
 
-  public selectNeighbours(target:Coord) {
-    this.map.forEach(h => h.deselect())
+  // public selectSingle(target:Coord) {
+  //   this._map.forEach(h => h.deselect())
+  //
+  //   this._map[GridUtils.coordToIndex(target)].select()
+  // }
 
-    GridUtils.getNeighbours(target).forEach(n => {
-      this.map[GridUtils.coordToIndex(n)].selectAsNeighbour()
-    })
-  }
+  // public selectNeighbours(target:Coord) {
+  //   this._map.forEach(h => h.deselect())
+  //
+  //   GridUtils.getNeighbours(target).forEach(n => {
+  //     this._map[GridUtils.coordToIndex(n)].selectAsNeighbour()
+  //   })
+  // }
 
-  public drawLine(from:Coord, target:Coord) {
-    this.map.forEach(h => h.deselect())
-
-    const line = GridUtils.line(from, target)
-    line.forEach(ln => {
-      this.map[GridUtils.coordToIndex(ln)].select()
-    })
+  // public drawLine(from:Coord, target:Coord) {
+  //   // this._map.forEach(h => h.deselect())
+  //
+  //   const line = GridUtils.line(from, target)
+  //   line.forEach(ln => {
+  //     this._map[GridUtils.coordToIndex(ln)].select()
+  //   })
+  // }
+  public deselectAll() {
+    this._map.forEach(h => h.clearState())
   }
 
   public drawReach(center:Coord) {
-    this.map.forEach(h => h.deselect())
     // breadth first search implementation
     let depth = 3
     let queue = [center]
@@ -74,17 +98,16 @@ export class Grid {
         const reachable = qHex.template.modifiers&Modifiers.WALKABLE
         if (reachable) {
           newQueue = newQueue.concat(GridUtils.getNeighbours(q))
-          qHex.setReachable(true)
-        } else {
-          qHex.setReachable(false)
+          qHex.highlight(HighlightMode.REACH)
         }
       })
       queue = newQueue
     }
+    this._map.forEach(h => h.visited = false)
   }
 
   public drawVisibility(center:Coord) {
-    this.map.forEach(h => h.deselect())
+    // this._map.forEach(h => h.deselect())
 
     const range = GridUtils.range(center, 3)
     range.forEach(c => {
@@ -92,7 +115,7 @@ export class Grid {
       if (line[line.length-1].equals(center)) line = line.reverse()
       let i = 0, h = this.getH(line[i])
       while ((h.template.modifiers&Modifiers.NONOBSTRUCTING) > 0) {
-        h.select()
+        !h.visited && h.highlight(HighlightMode.VISIBILITY)
         if (i < line.length) {
           h = this.getH(line[i])
           i++
@@ -100,19 +123,16 @@ export class Grid {
         else break
       }
     })
+    this._map.forEach(h => h.visited = false)
   }
 
   public findPath(from:Coord, to: Coord): Coord[] {
-    this.map.forEach(h => h.visited = false)
-
     const frontier = new PriorityQueue<Coord>()//GridUtils.getNeighbours(from)
     frontier.put(from, 0)
     const path = []
     path[GridUtils.coordToIndex(from)] = null
     const cost = []
     cost[GridUtils.coordToIndex(from)] = 0
-    // this.getH(from).select()
-    // this.getH(from).visited = true
     const result = []
 
     while (frontier.length > 0) {
@@ -122,7 +142,7 @@ export class Grid {
         const reverseAddToPath = point => {
           const stepIndex = path[GridUtils.coordToIndex(point)]
           if (stepIndex === null) return
-          const step = this.map[stepIndex].location
+          const step = this._map[stepIndex].location
           result.unshift(step)
 
           if (step.equals(from)) return
@@ -152,11 +172,19 @@ export class Grid {
   }
 
   public drawPath(from: Coord, to: Coord) {
-    this.map.forEach(h => h.deselect())
+    // this._map.forEach(h => h.deselect())
 
     const path = this.findPath(from, to)
+    if (path.length > 3) return
     path.forEach(p => {
-      this.getH(p).select()
+      this.getH(p).highlight(HighlightMode.PATH)
+    })
+  }
+
+  public redrawVisibility() {
+    this._units.forEach(u => {
+      if (!u) return
+      this.drawVisibility(u.location)
     })
   }
 }

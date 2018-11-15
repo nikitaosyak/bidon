@@ -7,6 +7,7 @@
   "devDependencies": {
     "@types/seedrandom": "^2.4.27",
     "@types/three": "^0.93.4",
+    "@types/tinycolor": "^1.1.27",
     "dotenv": "^6.1.0",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
@@ -28,6 +29,7 @@
     "stats.js": "^0.17.0",
     "three": "^0.97.0",
     "three-gltf-loader": "^1.97.0",
-    "three-orbitcontrols-ts": "^0.1.2"
+    "three-orbitcontrols-ts": "^0.1.2",
+    "tinycolor2": "^1.4.1"
   }
 }

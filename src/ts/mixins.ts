@@ -1,4 +1,4 @@
-import {Mesh, Object3D} from "three";
+import {Mesh} from "three";
 
 export function applyMixins(target: any, mixins: any[]):void {
   mixins.forEach(mixin => {

@@ -31,6 +31,11 @@
   resolved "https://registry.yarnpkg.com/@types/three/-/three-0.93.4.tgz#c79037715c8a02ab6549e4e81278eab589ceba53"
   integrity sha512-39yGI/s870c730jksA2dxlqAFRN3ASUoD8Ljob+CLAOnRKnAea+kr/cRdRx9zRMxS+hL/NSD8GUzN0XV6M3mFQ==
 
+"@types/tinycolor@^1.1.27":
+  version "1.1.27"
+  resolved "https://registry.yarnpkg.com/@types/tinycolor/-/tinycolor-1.1.27.tgz#d01d05a681d0ce28923b021d5f3d752ea0478089"
+  integrity sha1-0B0FpoHQziiSOwIdXz11LqBHgIk=
+
 "@webassemblyjs/ast@1.7.8":
   version "1.7.8"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.7.8.tgz#f31f480debeef957f01b623f27eabc695fa4fe8f"
@@ -4447,6 +4452,11 @@ tiny-lr@^1.1.1:
     livereload-js "^2.3.0"
     object-assign "^4.1.0"
     qs "^6.4.0"
+
+tinycolor2@^1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/tinycolor2/-/tinycolor2-1.4.1.tgz#f4fad333447bc0b07d4dc8e9209d8f39a8ac77e8"
+  integrity sha1-9PrTM0R7wLB9TcjpIJ2POaisd+g=
 
 to-absolute-glob@^2.0.0:
   version "2.0.2"

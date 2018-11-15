@@ -6,6 +6,8 @@ import {Utils} from "./utils/Utils";
 import {CDB} from "./gen/CDB";
 import {Assets} from "./utils/Assets";
 import {Hexagon} from "./grid/Hexagon";
+import apply = Reflect.apply;
+import {Unit} from "./unit/Unit";
 
 export class Facade implements Emitter, IUpdatable {
   private static _instance: Facade
@@ -14,6 +16,7 @@ export class Facade implements Emitter, IUpdatable {
     applyMixins(Facade, [Emitter])
     applyMixins(Resizer, [Emitter])
     applyMixins(Hexagon, [Visual])
+    applyMixins(Unit, [Visual])
 
     this._resizer = new Resizer()
     this._renderer = new Renderer()

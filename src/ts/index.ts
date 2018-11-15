@@ -2,7 +2,10 @@ import {Facade} from "./Facade";
 import {Events} from "./events";
 import {Grid} from "./grid/Grid";
 import Stats = require('Stats.js')
-import {GridInput} from "./grid/GridInput";      // MACRO: prod-cutout
+import {GridInput} from "./grid/GridInput";
+import {Unit} from "./unit/Unit";
+import {BoxBufferGeometry, Mesh, MeshBasicMaterial} from "three";
+import {Coord} from "./grid/GridUtils";      // MACRO: prod-cutout
 
 window.onload = () => {
 
@@ -10,16 +13,30 @@ window.onload = () => {
   stats.showPanel(0)                    // MACRO: prod-cutout
   document.body.appendChild(stats.dom)  // MACRO: prod-cutout
 
-  const gameLoop = () => {
-    stats.begin()                       // MACRO: prod-cutout
-    Facade.$.update(10)
-    stats.end()                         // MACRO: prod-cutout
-    requestAnimationFrame(gameLoop)
-  }
+
 
   Facade.$.on(Events.ASSETS_LOAD_COMPLETE, () => {
-    gameLoop()
     const grid = new Grid(15, 9)
     const input = new GridInput(grid)
+    const u = new Unit(new Mesh(
+      new BoxBufferGeometry(0.8, 0.8, 0.8),
+      new MeshBasicMaterial({color: 0x00CC00})
+    ), [])
+    const u1 = new Unit(new Mesh(
+      new BoxBufferGeometry(0.8, 0.8, 0.8),
+      new MeshBasicMaterial({color: 0x00CC00})
+    ), [])
+
+    grid.addUnit(u, new Coord(1, 2))
+    grid.addUnit(u1, new Coord(0, 5))
+    grid.redrawVisibility()
+
+    const gameLoop = () => {
+      stats.begin()                       // MACRO: prod-cutout
+      Facade.$.update(10)
+      stats.end()                         // MACRO: prod-cutout
+      requestAnimationFrame(gameLoop)
+    }
+    gameLoop()
   })
 }

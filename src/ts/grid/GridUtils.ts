@@ -1,3 +1,4 @@
+import {Vector3} from "three";
 
 export class Coord {
   private _q: number = Number.NaN
@@ -67,6 +68,17 @@ export class GridUtils {
     this._height = height
     this._angle = angle
     this._radius = radius
+  }
+
+  public static spaceAngleFromCoord(v: Coord): number {
+    return v.r * GridUtils.angle/2 + GridUtils.angle * v.q
+  }
+
+  public static setSpaceFromCoord(target: Vector3, v: Coord): void {
+    const myAngle = this.spaceAngleFromCoord(v)
+    target.set(Math.cos(myAngle) * GridUtils.radius,
+      -v.r * 1.5,
+      Math.sin(myAngle) * GridUtils.radius)
   }
 
   public static coordToIndex(v: Coord) { return v.r * this._width + v.q }
