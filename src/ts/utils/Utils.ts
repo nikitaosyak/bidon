@@ -28,4 +28,15 @@ export class Utils {
     return Object.keys(E)
       .filter(k => typeof E[k] === 'number')
   }
+
+  private static randomPool = 'ABCDEFGHIJKLMNOPabcdefghijklmnop'
+  static randomStr(len: number = 8): string {
+    let result = ''
+    for (let i = 0; i < len; i++)
+      result += this.randomPool.charAt(Math.floor(
+        Math.random() * this.randomPool.length
+      ))
+
+    return result
+  }
 }

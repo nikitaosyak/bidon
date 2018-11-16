@@ -8,6 +8,7 @@ import {Assets} from "./utils/Assets";
 import {Hexagon} from "./grid/Hexagon";
 import apply = Reflect.apply;
 import {Unit} from "./unit/Unit";
+import {Connection} from "./network/Connection";
 
 export class Facade implements Emitter, IUpdatable {
   private static _instance: Facade
@@ -18,6 +19,7 @@ export class Facade implements Emitter, IUpdatable {
     applyMixins(Hexagon, [Visual])
     applyMixins(Unit, [Visual])
 
+    this._connection = new Connection()
     this._resizer = new Resizer()
     this._renderer = new Renderer()
 
@@ -45,6 +47,7 @@ export class Facade implements Emitter, IUpdatable {
   private _cdb: CDB; get cdb() { return this._cdb }
   private readonly _renderer: Renderer; get renderer() { return this._renderer }
   private readonly _resizer: Resizer; get resizer() { return this._resizer }
+  private readonly _connection: Connection; get connection() { return this._connection }
 
   public update(dt:number): void {
     this._resizer.update(dt)

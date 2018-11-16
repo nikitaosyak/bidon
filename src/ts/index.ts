@@ -14,8 +14,7 @@ window.onload = () => {
   document.body.appendChild(stats.dom)  // MACRO: prod-cutout
 
 
-
-  Facade.$.on(Events.ASSETS_LOAD_COMPLETE, () => {
+  const startGame = () => {
     const grid = new Grid(15, 9)
     const input = new GridInput(grid)
     const u = new Unit(new Mesh(
@@ -38,5 +37,16 @@ window.onload = () => {
       requestAnimationFrame(gameLoop)
     }
     gameLoop()
+  }
+
+  Facade.$.on(Events.ASSETS_LOAD_COMPLETE, () => {
+    Facade.$.connection.connect()
+      .then(() => {
+        startGame()
+      })
+      .catch(e => {
+        console.error(e)
+        startGame()
+      })
   })
 }
