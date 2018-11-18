@@ -1,4 +1,4 @@
-import {Mesh} from "three";
+import {Object3D} from "three";
 
 export function applyMixins(target: any, mixins: any[]):void {
   mixins.forEach(mixin => {
@@ -9,8 +9,8 @@ export function applyMixins(target: any, mixins: any[]):void {
 }
 
 export class Visual {
-  visual: Mesh
-  setVisual(v: Mesh) {
+  visual: Object3D
+  setVisual(v: Object3D) {
     this.visual = v
     this.visual['self'] = this
   }

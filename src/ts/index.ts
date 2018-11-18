@@ -4,8 +4,9 @@ import {Grid} from "./grid/Grid";
 import Stats = require('Stats.js')
 import {GridInput} from "./grid/GridInput";
 import {Unit} from "./unit/Unit";
-import {BoxBufferGeometry, Mesh, MeshBasicMaterial} from "three";
-import {Coord} from "./grid/GridUtils";      // MACRO: prod-cutout
+import {BoxBufferGeometry, Mesh, MeshBasicMaterial, MeshStandardMaterial, Object3D, SphereBufferGeometry} from "three";
+import {Coord} from "./grid/GridUtils";
+import {Assets} from "./utils/Assets";      // MACRO: prod-cutout
 
 window.onload = () => {
 
@@ -18,12 +19,12 @@ window.onload = () => {
     const grid = new Grid(15, 9)
     const input = new GridInput(grid)
     const u = new Unit(new Mesh(
-      new BoxBufferGeometry(0.8, 0.8, 0.8),
-      new MeshBasicMaterial({color: 0x00CC00})
+      new SphereBufferGeometry(0.7, 8, 8),
+      new MeshBasicMaterial({color: 0x2222CC})
     ), [])
     const u1 = new Unit(new Mesh(
-      new BoxBufferGeometry(0.8, 0.8, 0.8),
-      new MeshBasicMaterial({color: 0x00CC00})
+      new SphereBufferGeometry(0.7, 8, 8),
+      new MeshBasicMaterial({color: 0x2222CC})
     ), [])
 
     grid.addUnit(u, new Coord(1, 2))

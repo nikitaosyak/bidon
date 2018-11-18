@@ -6,7 +6,6 @@ import {Utils} from "./utils/Utils";
 import {CDB} from "./gen/CDB";
 import {Assets} from "./utils/Assets";
 import {Hexagon} from "./grid/Hexagon";
-import apply = Reflect.apply;
 import {Unit} from "./unit/Unit";
 import {Connection} from "./network/Connection";
 
@@ -30,10 +29,12 @@ export class Facade implements Emitter, IUpdatable {
     Utils.loadJSON('./gameData.cdb')
       .then(rawData => {
         this._cdb = new CDB(rawData)
-        Assets.load('hex', 'assets/hex.gltf')
-          .then(() => {
+        Assets.add('hex', 'assets/hex/hex.gltf')
+          // .add('ghost', 'assets/ghost/ghost.gltf')
+          // .add('rabbit', 'assets/rabbit/rabbit.gltf')
+          .loadAll().then(() => {
             this.emit(Events.ASSETS_LOAD_COMPLETE)
-          })
+        })
       })
       .catch(e => {
         console.log('e?', e)
