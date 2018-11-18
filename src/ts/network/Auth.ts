@@ -32,7 +32,7 @@ export class Auth {
           try {
             const randomId = Utils.randomStr(8)
             return self.owner.nakama.authenticateEmail({
-              email: `nikita.osyak@gmail.com`,
+              email: `${randomId}@email.duh`,
               password: `${randomId}`
             })
               .then(session => {console.log('  success!'); return storeSession(session)})
