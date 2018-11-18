@@ -1,4 +1,5 @@
-import GLTFLoader = require('three-gltf-loader')
+import GLTFLoader = require('three-gltf-loader');
+import {LogTag, Utils} from "./Utils";
 
 export class Assets {
 
@@ -20,28 +21,37 @@ export class Assets {
       const item = this.queue.shift()
       await this.load(item.alias, item.url)
     }
-    console.log(this.cache)
   }
 
   private static load(alias, url) : Promise<void> {
-    console.log(`loading ${alias} from ${url}..`)
-    let Loader
-    let assetExtractor
-    const ext = url.match(/\..{3,4}$/)[0]
-    switch(ext) {
-      case '.gltf':
-        Loader = GLTFLoader;
-        assetExtractor = result => this.cache[alias] = result.scene.children[0]
-        break;
-    }
-
     return new Promise((resolve, reject) => {
+
+      Utils.log(LogTag.ASSETS, `loading ${alias} from ${url}..`)
+      let Loader
+      let assetExtractor
+      let args = []
+      let callFunction = ''
+      const ext = url.match(/\..{3,4}$/)[0]
+      switch(ext) {
+        case '.gltf':
+          Loader = GLTFLoader;
+          assetExtractor = result => this.cache[alias] = result.scene.children[0]
+          callFunction = 'load'
+          args = [
+            url,
+            result => {
+              Utils.log(LogTag.ASSETS, `complete loading ${alias}`)
+              assetExtractor(result)
+              resolve()
+            },
+            progress => {},
+            error => reject
+            ]
+          break;
+      }
+
       const l = new Loader()
-      l.load(url, result => {
-        console.log(`complete loading ${alias}`)
-        assetExtractor(result)
-        resolve()
-      })
+      try { l[callFunction](...args) } catch (e) { reject(e) }
     })
   }
 }

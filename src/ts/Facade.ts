@@ -36,9 +36,7 @@ export class Facade implements Emitter, IUpdatable {
             this.emit(Events.ASSETS_LOAD_COMPLETE)
         })
       })
-      .catch(e => {
-        console.log('e?', e)
-      })
+      .catch(Utils.logPromisedError)
   }
 
   public static get $() {

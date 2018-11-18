@@ -1,6 +1,6 @@
 import {Connection} from "./Connection";
 import {Session} from "@heroiclabs/nakama-js";
-import {Utils} from "../utils/Utils";
+import {LogTag, Utils} from "../utils/Utils";
 
 export class Auth {
 
@@ -14,20 +14,20 @@ export class Auth {
   public connect() {
     const self = this
     const storeSession = (session: Session) => {
-        console.log('saving session..')
+        Utils.log(LogTag.NETWORK, 'saving session..')
         return new Promise((resolve => {
 
           if (self.owner.saveSession) localStorage.bidon_session_token = session.token
           else localStorage.bidon_session_token = undefined
 
           self._session = session
-          console.log(`  successfully saved session of ${session.user_id}`)
+          Utils.log(LogTag.NETWORK, `  successfully saved session of ${session.user_id}`)
           resolve()
         }))
       }
 
     const authenticate = () => {
-        console.log('authenticating new user..')
+      Utils.log(LogTag.NETWORK, 'authenticating new user..')
         return new Promise(((resolve, reject) => {
           try {
             const randomId = Utils.randomStr(8)
@@ -35,7 +35,7 @@ export class Auth {
               email: `${randomId}@email.duh`,
               password: `${randomId}`
             })
-              .then(session => {console.log('  success!'); return storeSession(session)})
+              .then(session => {Utils.log(LogTag.NETWORK, '  success!'); return storeSession(session)})
               .then(resolve)
               .catch(reject)
           } catch (e) {
@@ -45,21 +45,21 @@ export class Auth {
       }
 
     const restoreSession = () => {
-        console.log('restore session..')
+      Utils.log(LogTag.NETWORK, 'restore session..')
         return new Promise(((resolve, reject) => {
           const jwt = self.owner.saveSession ? localStorage.bidon_session_token : ''
           if (typeof jwt === 'undefined' || jwt === '') {
-            console.log('  unable to restore')
+            Utils.log(LogTag.NETWORK, '  unable to restore')
             return reject()
           }
 
           const session = Session.restore(jwt)
           if (session.isexpired(Date.now())) {
-            console.log('  expired')
+            Utils.log(LogTag.NETWORK, '  expired')
             return reject()
           }
 
-          console.log('  success')
+          Utils.log(LogTag.NETWORK, '  success')
           resolve(session)
         }))
       }

@@ -4,9 +4,9 @@ import {Grid} from "./grid/Grid";
 import Stats = require('Stats.js')
 import {GridInput} from "./grid/GridInput";
 import {Unit} from "./unit/Unit";
-import {BoxBufferGeometry, Mesh, MeshBasicMaterial, MeshStandardMaterial, Object3D, SphereBufferGeometry} from "three";
+import {Mesh, MeshBasicMaterial, SphereBufferGeometry} from "three";
 import {Coord} from "./grid/GridUtils";
-import {Assets} from "./utils/Assets";      // MACRO: prod-cutout
+import {Utils} from "./utils/Utils";
 
 window.onload = () => {
 
@@ -45,9 +45,6 @@ window.onload = () => {
       .then(() => {
         startGame()
       })
-      .catch(e => {
-        console.error(e)
-        startGame()
-      })
+      .catch(Utils.logPromisedError)
   })
 }

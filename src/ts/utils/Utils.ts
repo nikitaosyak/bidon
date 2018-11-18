@@ -1,8 +1,14 @@
 
+export enum LogTag {
+  ASSETS,
+  NETWORK,
+  ERROR
+}
+
 export class Utils {
 
   static loadJSON(url) {
-    return new Promise<string>((resolve, reject) => {
+    return new Promise<any>((resolve, reject) => {
       const req = new XMLHttpRequest()
       req.overrideMimeType('application/json')
       req.open('GET', url, true)
@@ -14,6 +20,7 @@ export class Utils {
           reject()
         }
       }
+      req.onerror = reject
       req.send(null)
     })
   }
@@ -38,5 +45,29 @@ export class Utils {
       ))
 
     return result
+  }
+
+  public static async logPromisedError(value: Response | any) : Promise<void> {
+    if (value instanceof Response) {
+      const json = await value.json()
+      return Utils.log(LogTag.ERROR, `${value.status}: ${JSON.stringify(json)}`)
+    }
+    return Utils.log(LogTag.ERROR, value)
+  }
+
+  private static colors = {
+    [LogTag.ASSETS]: 'background: #222; color: #bada55',
+    [LogTag.NETWORK]: 'background: #2222AA; color: #E2E2E2'
+  }
+  private static prefix = {
+    [LogTag.ASSETS]: 'ASSETS:',
+    [LogTag.NETWORK]: 'NETWORK:'
+  }
+  public static log(tag : LogTag, content: any) {
+    if (tag === LogTag.ERROR) {
+      console.trace(content)
+    } else {
+      console.log(`%c ${this.prefix[tag]}${content} `, this.colors[tag])
+    }
   }
 }
