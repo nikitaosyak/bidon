@@ -1,4 +1,4 @@
-import {Emitter, Events} from "./events";
+import {Emitter, AppEvent} from "./events";
 import {IUpdatable} from "./mixins";
 
 export class Resizer implements Emitter, IUpdatable {
@@ -18,14 +18,14 @@ export class Resizer implements Emitter, IUpdatable {
     if (this._width !== w || this._height !== h) {
       this._width = w; this._height = h
       this._ar = this._width / this._height
-      this.emit(Events.RESIZE)
+      this.emit(AppEvent.RESIZE)
     }
   }
 
   //
   // emitter mixin boilerplate
   dict: object = {};
-  clear(event: Events): void {}
-  emit(event: Events, ...eventData: any[]): void {}
-  on(event: Events, callback: (...eventData: any[]) => void): void {}
+  clear(event: any): void {}
+  emit(event: any, ...eventData: any[]): void {}
+  on(event: any, callback: (...eventData: any[]) => void): void {}
 }

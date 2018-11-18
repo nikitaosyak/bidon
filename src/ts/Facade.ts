@@ -1,6 +1,6 @@
 import {Renderer} from "./Renderer";
 import {Resizer} from "./Resizer";
-import {Emitter, Events} from "./events";
+import {Emitter, AppEvent} from "./events";
 import {applyMixins, IUpdatable, Visual} from "./mixins";
 import {Utils} from "./utils/Utils";
 import {CDB} from "./gen/CDB";
@@ -8,6 +8,7 @@ import {Assets} from "./utils/Assets";
 import {Hexagon} from "./grid/Hexagon";
 import {Unit} from "./unit/Unit";
 import {Connection} from "./network/Connection";
+import {Realtime} from "./network/Realtime";
 
 export class Facade implements Emitter, IUpdatable {
   private static _instance: Facade
@@ -15,6 +16,7 @@ export class Facade implements Emitter, IUpdatable {
 
     applyMixins(Facade, [Emitter])
     applyMixins(Resizer, [Emitter])
+    applyMixins(Realtime, [Emitter])
     applyMixins(Hexagon, [Visual])
     applyMixins(Unit, [Visual])
 
@@ -22,7 +24,7 @@ export class Facade implements Emitter, IUpdatable {
     this._resizer = new Resizer()
     this._renderer = new Renderer()
 
-    this._resizer.on(Events.RESIZE, () => {
+    this._resizer.on(AppEvent.RESIZE, () => {
       this._renderer.resize()
     })
 
@@ -33,7 +35,7 @@ export class Facade implements Emitter, IUpdatable {
           // .add('ghost', 'assets/ghost/ghost.gltf')
           // .add('rabbit', 'assets/rabbit/rabbit.gltf')
           .loadAll().then(() => {
-            this.emit(Events.ASSETS_LOAD_COMPLETE)
+            this.emit(AppEvent.ASSETS_LOAD_COMPLETE)
         })
       })
       .catch(Utils.logPromisedError)
@@ -56,7 +58,7 @@ export class Facade implements Emitter, IUpdatable {
   //
   // emitter mixin boilerplate
   dict: object = {};
-  clear(event: Events): void {}
-  emit(event: Events, ...eventData: any[]): void {}
-  on(event: Events, callback: (...eventData: any[]) => void): void {}
+  clear(event: any): void {}
+  emit(event: any, ...eventData: any[]): void {}
+  on(event: any, callback: (...eventData: any[]) => void): void {}
 }

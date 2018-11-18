@@ -1,15 +1,14 @@
 
-export enum Events {
+export enum AppEvent {
   ASSETS_LOAD_COMPLETE,
-  RESIZE
+  RESIZE,
 }
 
 export class Emitter {
   dict: object
   constructor() {}
 
-
-  on(event:Events, callback:(...eventData:any[]) => void) {
+  on(event:any, callback:(...eventData:any[]) => void) {
     if (event in this.dict) {
       this.dict[event].push(callback)
     } else {
@@ -17,13 +16,13 @@ export class Emitter {
     }
   }
 
-  clear(event:Events) {
+  clear(event:any) {
     if (event in this.dict) {
       delete this.dict[event]
     }
   }
 
-  emit(event:Events, ...eventData:any[]) {
+  emit(event:any, ...eventData:any[]) {
     if (event in this.dict) {
       this.dict[event].forEach(callback => callback.apply(null, eventData))
     }

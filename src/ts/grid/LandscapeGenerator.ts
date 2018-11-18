@@ -10,7 +10,7 @@ export class LandscapeGenerator {
   static weightedRandomLayout(seed: string, width: number, height: number): HexTemplate[] {
     const rngSeq = seedrandom(seed, {global: false})
     const result = []
-    const strVariations = Utils.getEnumOptionsStr(HexTemplate.Values)
+    const strVariations = Utils.getEnumKeys(HexTemplate.Values)
     const variations = Utils.getEnumOptions(HexTemplate.Values)
 
     const mapSize = width * height

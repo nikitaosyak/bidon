@@ -26,14 +26,15 @@ export class Utils {
   }
 
   static getEnumOptions(E: any): number[] {
-    return Object.keys(E)
-      .filter(k => typeof E[k] !== 'number')
-      .map(v => Number(v))
+    const options = Object.keys(E)
+    let len = options.length/2
+    return options.splice(0, len).map(o => Number(o))
   }
 
-  static getEnumOptionsStr(E: any): string[] {
-    return Object.keys(E)
-      .filter(k => typeof E[k] === 'number')
+  static getEnumKeys(E: any): string[] {
+    const options = Object.keys(E)
+    let len = options.length/2
+    return options.splice(len)
   }
 
   private static randomPool = 'ABCDEFGHIJKLMNOPabcdefghijklmnop'

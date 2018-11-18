@@ -1,5 +1,5 @@
 import {Facade} from "./Facade";
-import {Events} from "./events";
+import {AppEvent} from "./events";
 import {Grid} from "./grid/Grid";
 import Stats = require('Stats.js')
 import {GridInput} from "./grid/GridInput";
@@ -14,6 +14,9 @@ window.onload = () => {
   stats.showPanel(0)                    // MACRO: prod-cutout
   document.body.appendChild(stats.dom)  // MACRO: prod-cutout
 
+  const matchmake = () => {
+
+  }
 
   const startGame = () => {
     const grid = new Grid(15, 9)
@@ -40,10 +43,13 @@ window.onload = () => {
     gameLoop()
   }
 
-  Facade.$.on(Events.ASSETS_LOAD_COMPLETE, () => {
-    Facade.$.connection.connect()
+  // show asset loading here
+  Facade.$.on(AppEvent.ASSETS_LOAD_COMPLETE, () => {
+    // show UI here
+    Facade.$.connection.authenticate()
+      //
       .then(() => {
-        startGame()
+        Facade.$.connection.goRealtime().then(startGame).catch(Utils.logPromisedError)
       })
       .catch(Utils.logPromisedError)
   })
