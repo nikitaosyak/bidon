@@ -66,7 +66,7 @@ export class GridInput {
         this.current = null
       }
       if (this.current) {
-        console.log('moving somewhere')
+        console.log('%cmoving somewhere')
         const path = grid.findPath(target.location, this.current.location).reverse()
         if (target.template.modifiers & HexTemplate.Modifiers.WALKABLE &&
             path.length <= 3) {

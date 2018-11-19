@@ -164,7 +164,6 @@ export class Grid {
         const currentIdx = GridUtils.coordToIndex(current)
         const singleCost = this.getH(next).template.modifiers & Modifiers.NONOBSTRUCTING ? 1 : 1000
         const nextCost = cost[currentIdx] + singleCost
-        // console.log(cost, nextIdx)
         if (!(nextIdx in cost) || nextCost < cost[nextIdx]) {
           cost[nextIdx] = nextCost
           const priority = nextCost + GridUtils.warpedDistance(to, next).d

@@ -1,11 +1,8 @@
-
-export enum LogTag {
-  ASSETS,
-  NETWORK,
-  ERROR
-}
-
 export class Utils {
+
+  public static LOG_ASSETS = 'background: #222; color: #bada55; font-weight: bold;'
+  public static LOG_NETWORK = 'background: #2222AA; color: #E2E2E2; font-weight: bold;'
+  public static LOG_BATTLE = 'background: #AA3232; color: #E2E2E2; font-weight: bold;'
 
   static loadJSON(url) {
     return new Promise<any>((resolve, reject) => {
@@ -51,24 +48,8 @@ export class Utils {
   public static async logPromisedError(value: Response | any) : Promise<void> {
     if (value instanceof Response) {
       const json = await value.json()
-      return Utils.log(LogTag.ERROR, `${value.status}: ${JSON.stringify(json)}`)
+      return console.error(`${value.status}: ${JSON.stringify(json)}`)
     }
-    return Utils.log(LogTag.ERROR, value)
-  }
-
-  private static colors = {
-    [LogTag.ASSETS]: 'background: #222; color: #bada55',
-    [LogTag.NETWORK]: 'background: #2222AA; color: #E2E2E2'
-  }
-  private static prefix = {
-    [LogTag.ASSETS]: 'ASSETS:',
-    [LogTag.NETWORK]: 'NETWORK:'
-  }
-  public static log(tag : LogTag, content: any) {
-    if (tag === LogTag.ERROR) {
-      console.trace(content)
-    } else {
-      console.log(`%c ${this.prefix[tag]}${content} `, this.colors[tag])
-    }
+    return console.error(value)
   }
 }

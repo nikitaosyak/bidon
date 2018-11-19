@@ -1,6 +1,7 @@
 import {Connection} from "./Connection";
 import {Socket} from "@heroiclabs/nakama-js/dist/socket";
 import {Emitter} from "../events";
+import {Utils} from "../utils/Utils";
 
 export const NakamaEvent = {
   ondisconnect: 'ondisconnect',               // data: CloseEvent
@@ -18,20 +19,21 @@ export const NakamaEvent = {
 export class Realtime implements Emitter {
 
   private owner: Connection
-  private socket: Socket
+  private _sock: Socket; public get sock(): Socket { return this._sock }
 
   constructor(owner: Connection) {
     this.owner = owner
   }
 
   public connect() {
-    this.socket = this.owner.nakama.createSocket(this.owner.nakama.useSSL, true)
+    console.log('%ccreating websocket connection', Utils.LOG_NETWORK)
+    this._sock = this.owner.nakama.createSocket(this.owner.nakama.useSSL, true)
 
     Object.keys(NakamaEvent).forEach(event => {
-      this.socket[event] = data => this.emit(event, data)
+      this._sock[event] = data => this.emit(event, data)
     })
 
-    return this.socket.connect(this.owner.auth.session, false)
+    return this._sock.connect(this.owner.auth.session, false)
   }
 
   dict: object = {};

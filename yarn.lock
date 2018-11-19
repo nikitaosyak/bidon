@@ -21,10 +21,9 @@
     normalize-path "^2.0.1"
     through2 "^2.0.3"
 
-"@heroiclabs/nakama-js@^2.0.1":
+"@heroiclabs/nakama-js@https://github.com/heroiclabs/nakama-js":
   version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@heroiclabs/nakama-js/-/nakama-js-2.0.1.tgz#a1a5a44353591771dfd7ec387326770172f0be0a"
-  integrity sha1-oaWkQ1NZF3Hf1+w4cyZ3AXLwvgo=
+  resolved "https://github.com/heroiclabs/nakama-js#8fe9ec5055bc2bcd75c9fed1dc092fec53cadb5d"
   dependencies:
     Base64 "^1.0.1"
     whatwg-fetch "^2.0.3"

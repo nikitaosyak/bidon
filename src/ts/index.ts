@@ -19,38 +19,39 @@ window.onload = () => {
   }
 
   const startGame = () => {
-    const grid = new Grid(15, 9)
-    const input = new GridInput(grid)
-    const u = new Unit(new Mesh(
-      new SphereBufferGeometry(0.7, 8, 8),
-      new MeshBasicMaterial({color: 0x2222CC})
-    ), [])
-    const u1 = new Unit(new Mesh(
-      new SphereBufferGeometry(0.7, 8, 8),
-      new MeshBasicMaterial({color: 0x2222CC})
-    ), [])
-
-    grid.addUnit(u, new Coord(1, 2))
-    grid.addUnit(u1, new Coord(0, 5))
-    grid.redrawVisibility()
-
-    const gameLoop = () => {
-      stats.begin()                       // MACRO: prod-cutout
-      Facade.$.update(10)
-      stats.end()                         // MACRO: prod-cutout
-      requestAnimationFrame(gameLoop)
-    }
-    gameLoop()
+    // const grid = new Grid(15, 9)
+    // const input = new GridInput(grid)
+    // const u = new Unit(new Mesh(
+    //   new SphereBufferGeometry(0.7, 8, 8),
+    //   new MeshBasicMaterial({color: 0x2222CC})
+    // ), [])
+    // const u1 = new Unit(new Mesh(
+    //   new SphereBufferGeometry(0.7, 8, 8),
+    //   new MeshBasicMaterial({color: 0x2222CC})
+    // ), [])
+    //
+    // grid.addUnit(u, new Coord(1, 2))
+    // grid.addUnit(u1, new Coord(0, 5))
+    // grid.redrawVisibility()
+    //
+    // const gameLoop = () => {
+    //   stats.begin()                       // MACRO: prod-cutout
+    //   Facade.$.update(10)
+    //   stats.end()                         // MACRO: prod-cutout
+    //   requestAnimationFrame(gameLoop)
+    // }
+    // gameLoop()
   }
 
   // show asset loading here
   Facade.$.on(AppEvent.ASSETS_LOAD_COMPLETE, () => {
     // show UI here
-    Facade.$.connection.authenticate()
-      //
-      .then(() => {
-        Facade.$.connection.goRealtime().then(startGame).catch(Utils.logPromisedError)
-      })
+
+    Facade.$.connection.auth.connect()
+      .then(Facade.$.connection.realtime.connect.bind(Facade.$.connection.realtime))
+      .then(Facade.$.connection.matchmaker.findMatch.bind(Facade.$.connection.matchmaker))
+      // .then(Facade.$.connection.matchmaker.cancelMatch.bind(Facade.$.connection.matchmaker))
+      .then(startGame)
       .catch(Utils.logPromisedError)
   })
 }

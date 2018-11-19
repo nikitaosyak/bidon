@@ -1,5 +1,5 @@
 import GLTFLoader = require('three-gltf-loader');
-import {LogTag, Utils} from "./Utils";
+import {Utils} from "./Utils";
 
 export class Assets {
 
@@ -26,7 +26,7 @@ export class Assets {
   private static load(alias, url) : Promise<void> {
     return new Promise((resolve, reject) => {
 
-      Utils.log(LogTag.ASSETS, `loading ${alias} from ${url}..`)
+      console.log(`%cloading ${alias} from ${url}..`, Utils.LOG_ASSETS)
       let Loader
       let assetExtractor
       let args = []
@@ -40,7 +40,7 @@ export class Assets {
           args = [
             url,
             result => {
-              Utils.log(LogTag.ASSETS, `complete loading ${alias}`)
+              console.log(`%ccomplete loading ${alias}`, Utils.LOG_ASSETS)
               assetExtractor(result)
               resolve()
             },
