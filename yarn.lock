@@ -23,7 +23,7 @@
 
 "@heroiclabs/nakama-js@https://github.com/heroiclabs/nakama-js":
   version "2.0.1"
-  resolved "https://github.com/heroiclabs/nakama-js#8fe9ec5055bc2bcd75c9fed1dc092fec53cadb5d"
+  resolved "https://github.com/heroiclabs/nakama-js#9a2a2a92c70908727cbb66d744591bdbabdbf61e"
   dependencies:
     Base64 "^1.0.1"
     whatwg-fetch "^2.0.3"

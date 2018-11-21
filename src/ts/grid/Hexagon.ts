@@ -15,7 +15,8 @@ export class Hexagon implements Visual {
 
   private pos: Coord; public get location() { return this.pos }
   private _template: HexTemplate; public get template() { return this._template }
-  private originalColor: tinycolorInstance
+  private hiddenColor: string
+  private visibleColor: string
 
   public visited: boolean = false
   public visible: boolean = false
@@ -24,11 +25,12 @@ export class Hexagon implements Visual {
     this.pos = new Coord(q, r)
 
     this._template = template
-    this.originalColor = tinycolor(this._template.visualMarker).darken(30)
+    this.hiddenColor = tinycolor(this._template.visualMarker).desaturate(100).toHexString()
+    this.visibleColor = tinycolor(this._template.visualMarker).toHexString()
 
     const meshTemplate = Assets.getAsset<Mesh>('hex')
     this.setVisual(new Mesh(meshTemplate.geometry.clone(), new MeshStandardMaterial({
-      color: this.originalColor.toHexString(), metalness: 0.1, emissiveIntensity: 0, emissive: 0x22FF22
+      color: this.hiddenColor, metalness: 0.1, emissiveIntensity: 0, emissive: 0x22FF22
     })))
 
     GridUtils.setSpaceFromCoord(this.visual.position, this.pos)
@@ -40,13 +42,13 @@ export class Hexagon implements Visual {
     switch (mode) {
       case HighlightMode.VISIBILITY:
         this.visible = true
-        this.visual.material['color'].set(this.originalColor.clone().lighten(30).toHexString())
+        this.visual.material['color'].set(this.visibleColor)
         break
       case HighlightMode.REACH:
-        this.visual.material['emissiveIntensity'] = 0.15
+        this.visual.material['emissiveIntensity'] = 0.1
         break
       case HighlightMode.PATH:
-        this.visual.material['emissiveIntensity'] = 0.3
+        this.visual.material['emissiveIntensity'] = 0.2
         break
     }
     this.visited = true
@@ -56,7 +58,7 @@ export class Hexagon implements Visual {
   public clearState():void {
     this.visible = false
     this.visited = false
-    this.visual.material['color'].set(this.originalColor.toHexString())
+    this.visual.material['color'].set(this.hiddenColor)
     this.visual.material['emissiveIntensity'] = 0
   }
 

@@ -1,0 +1,8 @@
+{
+  "players": 2,
+  "minPlayers": 2,
+  "gridWidth": 18,
+  "gridHeight": 9,
+  "seed": "random_mead",
+  "weights": [0.3, 0.3, 0.3, 0, 0.1, 0]
+}

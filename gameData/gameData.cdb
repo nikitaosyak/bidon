@@ -169,7 +169,7 @@
 				},
 				{
 					"id": "mountainTile",
-					"visualMarker": 13092550,
+					"visualMarker": 0,
 					"element": [
 						4
 					],
@@ -177,7 +177,7 @@
 				},
 				{
 					"id": "voidTile",
-					"visualMarker": 0,
+					"visualMarker": 16777215,
 					"element": [
 						4
 					],

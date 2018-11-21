@@ -2,12 +2,13 @@ import {Connection} from "./Connection";
 import {MatchmakerAdd, MatchmakerMatched, MatchmakerRemove} from "@heroiclabs/nakama-js/dist/socket";
 import {Utils} from "../utils/Utils";
 import {NakamaEvent} from "./Realtime";
+import {Rules} from "../simulation/Rules";
 
 export class MatchMaker {
 
   private owner: Connection
   private currentTicket: string = null
-
+  private currentRules: Rules
 
   private REMOVE_FROM_QUEUE : MatchmakerRemove = { matchmaker_remove: { ticket: null } }
   private ADD_TO_QUEUE : MatchmakerAdd = {
@@ -28,8 +29,14 @@ export class MatchMaker {
       if (this.currentTicket == null) {console.error(`I don't have match ticket, yet i got matched`); return}
       if (this.currentTicket !== result.ticket) {console.error(`Ticket mismatch!`); return}
 
-      this.owner.battle.join(result)
+      this.owner.battle.join(this.currentRules, result)
     })
+  }
+
+  public setRules(rules: Rules) {
+    this.currentRules = rules
+    this.ADD_TO_QUEUE.matchmaker_add.min_count = rules.minPlayers
+    this.ADD_TO_QUEUE.matchmaker_add.max_count = rules.players
   }
 
   public async findMatch() {

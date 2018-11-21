@@ -7,6 +7,7 @@ import {PriorityQueue} from "../utils/PriorityQueue";
 import {Unit} from "../unit/Unit";
 import {Group, Mesh} from "three";
 import Modifiers = HexTemplate.Modifiers;
+import {Rules} from "../simulation/Rules";
 
 export class Grid {
 
@@ -18,11 +19,17 @@ export class Grid {
   private _units: Unit[]; public get units() { return this._units };
   public getU(c: Coord) : Unit { return this._units[GridUtils.coordToIndex(c)] }
   public getH(c: Coord) : Hexagon { return this._map[GridUtils.coordToIndex(c)] }
+  private _respawns: Coord[]; public get respawns() { return this._respawns }
 
   private dirty = true; public setDirty() { this.dirty = true }
 
-  constructor(width: number, height: number) {
-    const layout = LandscapeGenerator.weightedRandomLayout('oн hello', width, height)
+  constructor(rules: Rules) {
+    const width = rules.gridWidth, height = rules.gridHeight, seed = rules.seed
+    const layout = LandscapeGenerator.weightedRandomLayout(rules)
+    this._respawns = [
+      new Coord(0, 1),
+      new Coord(Math.floor(width/2 - Math.floor(Math.log10(height))), height-2)
+    ]
     GridUtils.init(
       width,
       height,
@@ -94,7 +101,7 @@ export class Grid {
 
   public drawReach(center:Coord) {
     // breadth first search implementation
-    let depth = 3
+    let depth = 2
     let queue = [center]
     while (depth --> 0) {
       let newQueue = []
@@ -115,7 +122,7 @@ export class Grid {
   public drawVisibility(center:Coord) {
     // this._map.forEach(h => h.deselect())
 
-    const range = GridUtils.range(center, 3)
+    const range = GridUtils.range(center, 2)
     range.forEach(c => {
       let line = GridUtils.line(center, c)
       if (line[line.length-1].equals(center)) line = line.reverse()

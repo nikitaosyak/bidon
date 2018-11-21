@@ -1,20 +1,24 @@
 import {Utils} from "../utils/Utils";
 import {HexTemplate} from "../gen/HexTemplate";
 import {Facade} from "../Facade";
+import {Rules} from "../simulation/Rules";
 import seedrandom = require("seedrandom")
 
 export class LandscapeGenerator {
 
-  private static readonly weights: number[] = [0.7, 0.00, 0.00, 0.00, 0.3, 0.0]
+  static weightedRandomLayout(rules: Rules): HexTemplate[] {
+    const width = rules.gridWidth,
+          height = rules.gridHeight,
+          seed = rules.seed,
+          weights = rules.weights
 
-  static weightedRandomLayout(seed: string, width: number, height: number): HexTemplate[] {
     const rngSeq = seedrandom(seed, {global: false})
     const result = []
     const strVariations = Utils.getEnumKeys(HexTemplate.Values)
     const variations = Utils.getEnumOptions(HexTemplate.Values)
 
     const mapSize = width * height
-    const approximatedWeights = this.weights.map(w => Math.ceil(w * mapSize))
+    const approximatedWeights = weights.map(w => Math.ceil(w * mapSize))
     const extraTiles = approximatedWeights.reduce((acc, v) => acc + v, 0) - mapSize
     if (extraTiles > 0) {
       for (let i = 0; i < extraTiles; i++) {

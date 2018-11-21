@@ -15,8 +15,7 @@ export class Connection {
   public get saveSession() { return false }
 
   constructor() {
-    this._nakama = new Client(
-      'defaultkey', 'nikitka.codes')
+    this._nakama = new Client('defaultkey', 'nikitka.codes')
 
     this._auth = new Auth(this)
     this._realtime = new Realtime(this)

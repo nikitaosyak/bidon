@@ -70,6 +70,7 @@ gulp.task('webpack', ['transpile'], () => {
 
 gulp.task('deploy-static', ['webpack'], () => {
   fs.copyFileSync('gameData/gameData.cdb', 'build/gameData.cdb')
+  fs.copyFileSync('gameData/rules.json', 'build/rules.json')
   fs.copyFileSync('src/index.html', 'build/index.html')
 
   return gulp.src(['assets/**/*']).pipe(gulp.dest('build/assets'))

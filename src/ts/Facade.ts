@@ -9,6 +9,7 @@ import {Hexagon} from "./grid/Hexagon";
 import {Unit} from "./unit/Unit";
 import {Connection} from "./network/Connection";
 import {Realtime} from "./network/Realtime";
+import {Battle} from "./network/Battle";
 
 export class Facade implements Emitter, IUpdatable {
   private static _instance: Facade
@@ -17,6 +18,7 @@ export class Facade implements Emitter, IUpdatable {
     applyMixins(Facade, [Emitter])
     applyMixins(Resizer, [Emitter])
     applyMixins(Realtime, [Emitter])
+    applyMixins(Battle, [Emitter])
     applyMixins(Hexagon, [Visual])
     applyMixins(Unit, [Visual])
 
@@ -32,8 +34,6 @@ export class Facade implements Emitter, IUpdatable {
       .then(rawData => {
         this._cdb = new CDB(rawData)
         Assets.add('hex', 'assets/hex/hex.gltf')
-          // .add('ghost', 'assets/ghost/ghost.gltf')
-          // .add('rabbit', 'assets/rabbit/rabbit.gltf')
           .loadAll().then(() => {
             this.emit(AppEvent.ASSETS_LOAD_COMPLETE)
         })
