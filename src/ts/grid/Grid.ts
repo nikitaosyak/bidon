@@ -5,11 +5,10 @@ import {Hexagon, HighlightMode} from "./Hexagon";
 import {HexTemplate} from "../gen/HexTemplate";
 import {PriorityQueue} from "../utils/PriorityQueue";
 import {Unit} from "../unit/Unit";
-import {Euler, Group, Mesh, Vector3} from "three";
-import Modifiers = HexTemplate.Modifiers;
+import {Group, Mesh} from "three";
 import {Rules} from "../simulation/Rules";
 import {TweenLite} from 'gsap'
-import THREE = require("three");
+import Modifiers = HexTemplate.Modifiers;
 
 export class Grid {
 
@@ -133,9 +132,14 @@ export class Grid {
         const qHex = this.getH(q)
         if (qHex.visited) return
         const reachable = qHex.template.modifiers&Modifiers.WALKABLE
+        const occupied = this.getU(qHex.location)
         if (reachable) {
           newQueue = newQueue.concat(GridUtils.getNeighbours(q))
-          qHex.highlight(HighlightMode.REACH)
+          if (occupied) {
+            qHex.visited = true
+          } else {
+            qHex.highlight(HighlightMode.REACH)
+          }
         }
       })
       queue = newQueue
@@ -191,9 +195,14 @@ export class Grid {
       }
 
       GridUtils.getNeighbours(current).forEach(next => {
+        const calculateCost = (pos: Coord) => {
+          const gridCost = this.getH(pos).template.modifiers & Modifiers.NONOBSTRUCTING ? 1 : 100
+          const unitCost = this.getU(pos) ? 100 : 1
+          return Math.max(gridCost, unitCost)
+        }
         const nextIdx = GridUtils.coordToIndex(next)
         const currentIdx = GridUtils.coordToIndex(current)
-        const singleCost = this.getH(next).template.modifiers & Modifiers.NONOBSTRUCTING ? 1 : 1000
+        const singleCost = calculateCost(next)
         const nextCost = cost[currentIdx] + singleCost
         if (!(nextIdx in cost) || nextCost < cost[nextIdx]) {
           cost[nextIdx] = nextCost
