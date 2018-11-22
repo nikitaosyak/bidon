@@ -11,7 +11,7 @@ export class Renderer implements IUpdatable {
   private readonly _camera: THREE.PerspectiveCamera; get camera() { return this._camera }
   private readonly _light: THREE.DirectionalLight; get light() { return this._light }
   private readonly _renderer: THREE.WebGLRenderer
-  private readonly _controls
+  private readonly _controls: OrbitControls; get controls() { return this._controls }
 
   private readonly stats2: RendererStats// MACRO: prod-cutout
 

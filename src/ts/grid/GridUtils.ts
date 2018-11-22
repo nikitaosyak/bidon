@@ -29,6 +29,10 @@ export class Coord {
   }
 
   toString() { return `[${this._q}:${this._r}]` }
+  serialize() { return { q: this._q, r: this._r }}
+  public static serializeArray(values: Coord[]) {
+    return values.map(v => v.serialize())
+  }
 
   private static pool: Coord[] = []
   public static getOne(): Coord {

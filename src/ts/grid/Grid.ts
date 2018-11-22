@@ -30,7 +30,8 @@ export class Grid {
     const layout = LandscapeGenerator.weightedRandomLayout(rules)
     this._respawns = [
       new Coord(0, 1),
-      new Coord(Math.floor(width/2 - Math.floor(Math.log10(height))), height-2)
+      new Coord(1, 0),
+      // new Coord(Math.floor(width/2 - Math.floor(Math.log10(height))), height-2)
     ]
     GridUtils.init(
       width,

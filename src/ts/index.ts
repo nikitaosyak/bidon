@@ -8,7 +8,7 @@ import {Mesh, MeshBasicMaterial, SphereBufferGeometry} from "three";
 import {Coord} from "./grid/GridUtils";
 import {Utils} from "./utils/Utils";
 import {Rules} from "./simulation/Rules";
-import {BattleEvent} from "./network/Battle";
+import {BATTLE_FRACTIONS, BattleEvent} from "./network/Battle";
 
 window.onload = () => {
 
@@ -22,22 +22,14 @@ window.onload = () => {
 
   const startGame = () => {
     Facade.$.connection.battle.on(BattleEvent.JOINED, e => {
-      const grid = new Grid(Facade.$.connection.battle.rules)
-      const input = new GridInput(grid)
-      const u = new Unit(new Mesh(
-        new SphereBufferGeometry(0.7, 8, 8),
-        new MeshBasicMaterial({color: 0x2222CC})
-      ), [])
-      const u1 = new Unit(new Mesh(
-        new SphereBufferGeometry(0.7, 8, 8),
-        new MeshBasicMaterial({color: 0x2222CC})
-      ), [])
+      Facade.$.startNewSimulation()
 
-      const start = grid.respawns[Facade.$.connection.battle.data.myQueue]
-      grid.addUnit(u, start)
-      // grid.addUnit(u1, new Coord(0, 5))
-      grid.redrawVisibility()
-      grid.centerOnLocation(u.location)
+      Facade.$.executor.addUnit(
+        Facade.$.simulation.grid.respawns[Facade.$.connection.battle.data.myQueue],
+        BATTLE_FRACTIONS[Facade.$.connection.battle.data.myQueue],
+        true,
+        true
+      )
 
       const gameLoop = () => {
         stats.begin()                       // MACRO: prod-cutout

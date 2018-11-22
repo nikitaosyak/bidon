@@ -5,12 +5,14 @@ import {
   Presence,
   Match,
   MatchPresenceEvent,
-  LeaveMatch, MatchData
+  LeaveMatch, MatchData, MatchDataSend
 } from "@heroiclabs/nakama-js/dist/socket";
 import {Utils} from "../utils/Utils";
 import {NakamaEvent} from "./Realtime";
 import {Rules} from "../simulation/Rules";
 import {Emitter} from "../events";
+import {Coord} from "../grid/GridUtils";
+import {Facade} from "../Facade";
 
 export class BattleData {
   public ticket: string
@@ -34,6 +36,14 @@ export enum BattleEvent {
   LEFT
 }
 
+export enum BattleOpCodes {
+  ADD_UNIT = 1,
+  MOVE_UNIT = 2
+}
+
+export const BATTLE_FRACTIONS = [
+  0x2222CC, 0xCC2222, 0x22CC22, 0xCC22CC
+]
 
 export class Battle implements Emitter {
 
@@ -48,6 +58,15 @@ export class Battle implements Emitter {
   private LEAVE_MATCH: LeaveMatch = {
     match_leave: {
       match_id: undefined
+    }
+  }
+
+  private MATCH_DATA: MatchDataSend = {
+    match_data_send: {
+      match_id: undefined,
+      op_code: undefined,
+      data: undefined,
+      presence: undefined,
     }
   }
 
@@ -95,8 +114,19 @@ export class Battle implements Emitter {
       }
     })
 
-    this.owner.realtime.on(NakamaEvent.onmatchdata, (e: MatchData) => {
-
+    this.owner.realtime.on(NakamaEvent.onmatchdata, (data: MatchData) => {
+      const packet = data.data as any
+      switch (data.op_code) {
+        case BattleOpCodes.ADD_UNIT:
+          Facade.$.executor.addUnit(
+            new Coord(packet.position.q, packet.position.r),
+            BATTLE_FRACTIONS[packet.fraction],
+            false, false
+          )
+          break
+        case BattleOpCodes.MOVE_UNIT:
+          break
+      }
     })
   }
 
@@ -115,7 +145,7 @@ export class Battle implements Emitter {
 
     let result : any = await this.owner.realtime.sock.send(this.JOIN_MATCH)
     result = result.match as Match
-    this._data.match_id = result.match_id
+    this._data.match_id = this.MATCH_DATA.match_data_send.match_id = result.match_id
     this._data.myQueue = result.presences.length
     this._players = result.presences.splice(0)
     this._state = BattleState.WAITING_FOR_ALL_PLAYERS
@@ -137,6 +167,12 @@ export class Battle implements Emitter {
   // public async makeMove() {
   //
   // }
+
+  public async addUnits(at: Coord) {
+    this.MATCH_DATA.match_data_send.op_code = BattleOpCodes.ADD_UNIT
+    this.MATCH_DATA.match_data_send.data = {fraction: this.data.myQueue, position: at.serialize()}
+    this.owner.realtime.sock.send(this.MATCH_DATA)
+  }
 
   dict: object = {};
   clear(event: any): void {}

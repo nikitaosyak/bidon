@@ -10,6 +10,14 @@ import {Unit} from "./unit/Unit";
 import {Connection} from "./network/Connection";
 import {Realtime} from "./network/Realtime";
 import {Battle} from "./network/Battle";
+import {Grid} from "./grid/Grid";
+import {GridInput} from "./grid/GridInput";
+import {Executor} from "./simulation/Executor";
+
+export interface Simulation {
+  grid: Grid,
+  input: GridInput
+}
 
 export class Facade implements Emitter, IUpdatable {
   private static _instance: Facade
@@ -25,6 +33,7 @@ export class Facade implements Emitter, IUpdatable {
     this._connection = new Connection()
     this._resizer = new Resizer()
     this._renderer = new Renderer()
+    this._executor = new Executor()
 
     this._resizer.on(AppEvent.RESIZE, () => {
       this._renderer.resize()
@@ -49,6 +58,17 @@ export class Facade implements Emitter, IUpdatable {
   private readonly _renderer: Renderer; get renderer() { return this._renderer }
   private readonly _resizer: Resizer; get resizer() { return this._resizer }
   private readonly _connection: Connection; get connection() { return this._connection }
+  private readonly _executor: Executor; get executor() { return this._executor }
+
+  public simulation : Simulation = {
+    grid: undefined,
+    input: undefined
+  }
+
+  public startNewSimulation() {
+    this.simulation.grid = new Grid(Facade.$.connection.battle.rules)
+    this.simulation.input = new GridInput(this.simulation.grid)
+  }
 
   public update(dt:number): void {
     this._resizer.update(dt)
