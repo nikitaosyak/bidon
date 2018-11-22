@@ -5,9 +5,11 @@ import {Hexagon, HighlightMode} from "./Hexagon";
 import {HexTemplate} from "../gen/HexTemplate";
 import {PriorityQueue} from "../utils/PriorityQueue";
 import {Unit} from "../unit/Unit";
-import {Group, Mesh} from "three";
+import {Euler, Group, Mesh, Vector3} from "three";
 import Modifiers = HexTemplate.Modifiers;
 import {Rules} from "../simulation/Rules";
+import {TweenLite} from 'gsap'
+import THREE = require("three");
 
 export class Grid {
 
@@ -73,6 +75,27 @@ export class Grid {
     v.location = to
   }
 
+  public centerOnLocation(v: Coord) : void {
+    const h = this.getH(v)
+    const to = Math.atan2(h.visual.position.z, h.visual.position.x)
+    this._group.rotation.set(0, to, 0)
+  }
+
+  public centerOnLocationAnimated(v: Coord, time: number = 0.4) : void {
+    const dummy = {rotation: this._group.rotation.y}
+    const h = this.getH(v)
+    const to = Math.atan2(h.visual.position.z, h.visual.position.x)
+
+    TweenLite.to(
+      dummy,
+      time,
+      {
+        directionalRotation: {rotation: `${to}_short`, useRadians: true},
+        onUpdate: () => {
+          this._group.rotation.set(0, dummy.rotation, 0)
+        }})
+  }
+
   // public selectSingle(target:Coord) {
   //   this._map.forEach(h => h.deselect())
   //
@@ -101,7 +124,7 @@ export class Grid {
 
   public drawReach(center:Coord) {
     // breadth first search implementation
-    let depth = 2
+    let depth = 3
     let queue = [center]
     while (depth --> 0) {
       let newQueue = []
@@ -122,7 +145,7 @@ export class Grid {
   public drawVisibility(center:Coord) {
     // this._map.forEach(h => h.deselect())
 
-    const range = GridUtils.range(center, 2)
+    const range = GridUtils.range(center, 3)
     range.forEach(c => {
       let line = GridUtils.line(center, c)
       if (line[line.length-1].equals(center)) line = line.reverse()

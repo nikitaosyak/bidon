@@ -37,6 +37,7 @@ window.onload = () => {
       grid.addUnit(u, start)
       // grid.addUnit(u1, new Coord(0, 5))
       grid.redrawVisibility()
+      grid.centerOnLocation(u.location)
 
       const gameLoop = () => {
         stats.begin()                       // MACRO: prod-cutout

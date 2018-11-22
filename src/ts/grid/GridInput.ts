@@ -6,6 +6,7 @@ import {Unit} from "../unit/Unit";
 import {Coord, GridUtils} from "./GridUtils";
 import {HexTemplate} from "../gen/HexTemplate";
 import {TweenLite} from 'gsap'
+import {Utils} from "../utils/Utils";
 
 export class GridInput {
 
@@ -66,13 +67,15 @@ export class GridInput {
         this.current = null
       }
       if (this.current) {
-        console.log('%cmoving somewhere')
+        console.log(`%cmoving along path`, Utils.LOG_INPUT)
         const path = grid.findPath(target.location, this.current.location).reverse()
+        path.splice(0, 1)
         if (target.template.modifiers & HexTemplate.Modifiers.WALKABLE &&
             path.length <= 3) {
           this.enabled = false
           const goOneStep = (to: Coord) => {
-            TweenLite.to(this.current.visual.position, 0.3, Object.assign({
+            grid.centerOnLocationAnimated(to, 0.45)
+            TweenLite.to(this.current.visual.position, 0.5, Object.assign({
               onComplete: () => {
                 grid.moveUnitInternal(this.current, to)
                 this.grid.deselectAll()
