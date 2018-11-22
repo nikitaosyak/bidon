@@ -3,7 +3,7 @@ import {Visual} from "../mixins";
 import {Mesh, MeshPhongMaterial, MeshStandardMaterial, ShaderMaterial} from "three";
 import {Assets} from "../utils/Assets";
 import {Coord, GridUtils} from "./GridUtils";
-import tinycolor = require('tinycolor2')
+import * as chroma from "chroma-js";
 
 export enum HighlightMode {
   VISIBILITY,
@@ -25,8 +25,8 @@ export class Hexagon implements Visual {
     this.pos = new Coord(q, r)
 
     this._template = template
-    this.hiddenColor = tinycolor(this._template.visualMarker).desaturate(100).toHexString()
-    this.visibleColor = tinycolor(this._template.visualMarker).toHexString()
+    this.hiddenColor = chroma.scale([this._template.visualMarker, '#222222']).mode('lab')(0.7).hex()
+    this.visibleColor = chroma(this._template.visualMarker).hex()
 
     const meshTemplate = Assets.getAsset<Mesh>('hex')
     this.setVisual(new Mesh(meshTemplate.geometry.clone(), new MeshStandardMaterial({
