@@ -17,6 +17,8 @@ export class Hexagon implements Visual {
   private _template: HexTemplate; public get template() { return this._template }
   private hiddenColor: string
   private visibleColor: string
+  private reachColor: string
+  private pathColor: string
 
   public visited: boolean = false
   public visible: boolean = false
@@ -27,10 +29,12 @@ export class Hexagon implements Visual {
     this._template = template
     this.hiddenColor = chroma.scale([this._template.visualMarker, '#222222']).mode('lab')(0.7).hex()
     this.visibleColor = chroma(this._template.visualMarker).hex()
+    this.reachColor = chroma.scale([this._template.visualMarker, '#00FF00']).mode('lab')(0.5).hex()
+    this.pathColor = chroma.scale([this._template.visualMarker, '#FFFFFF']).mode('lab')(0.7).hex()
 
     const meshTemplate = Assets.getAsset<Mesh>('hex')
     this.setVisual(new Mesh(meshTemplate.geometry.clone(), new MeshStandardMaterial({
-      color: this.hiddenColor, metalness: 0.1, emissiveIntensity: 0, emissive: 0x22FF22
+      color: this.hiddenColor, metalness: 0.2, emissiveIntensity: 0, emissive: 0x22FF22
     })))
 
     GridUtils.setSpaceFromCoord(this.visual.position, this.pos)
@@ -45,10 +49,12 @@ export class Hexagon implements Visual {
         this.visual.material['color'].set(this.visibleColor)
         break
       case HighlightMode.REACH:
-        this.visual.material['emissiveIntensity'] = 0.1
+        // this.visual.material['emissiveIntensity'] = 0.1
+        this.visual.material['color'].set(this.reachColor)
         break
       case HighlightMode.PATH:
-        this.visual.material['emissiveIntensity'] = 0.2
+        // this.visual.material['emissiveIntensity'] = 0.2
+        this.visual.material['color'].set(this.pathColor)
         break
     }
     this.visited = true
@@ -59,7 +65,7 @@ export class Hexagon implements Visual {
     this.visible = false
     this.visited = false
     this.visual.material['color'].set(this.hiddenColor)
-    this.visual.material['emissiveIntensity'] = 0
+    // this.visual.material['emissiveIntensity'] = 0
   }
 
   visual: Mesh;

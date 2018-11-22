@@ -67,11 +67,11 @@ export class GridInput {
         this.current = null
       }
       if (this.current) {
-        console.log(`%cmoving along path`, Utils.LOG_INPUT)
         const path = grid.findPath(target.location, this.current.location).reverse()
         path.splice(0, 1)
         if (target.template.modifiers & HexTemplate.Modifiers.WALKABLE &&
-            path.length <= 3) {
+            path.length < 3 && path.length > 0) {
+          console.log(`%cmoving along path`, Utils.LOG_INPUT)
           this.enabled = false
           const goOneStep = (to: Coord) => {
             grid.centerOnLocationAnimated(to, 0.45)
@@ -91,6 +91,8 @@ export class GridInput {
               }
             }, GridUtils.getSpaceFromCoord(to)))
           }
+          grid.deselectAll()
+          grid.redrawVisibility()
           goOneStep(path.splice(0, 1)[0])
         }
       } else {
