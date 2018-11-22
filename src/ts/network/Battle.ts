@@ -120,7 +120,7 @@ export class Battle implements Emitter {
         case BattleOpCodes.ADD_UNIT:
           Facade.$.executor.addUnit(
             new Coord(packet.position.q, packet.position.r),
-            BATTLE_FRACTIONS[packet.fraction],
+            1,
             false, false
           )
           break

@@ -96,7 +96,7 @@ export class GridInput {
           goOneStep(path.splice(0, 1)[0])
         }
       } else {
-        if (targetUnit) {
+        if (targetUnit && targetUnit.fraction === 0) {
           this.current = targetUnit
           this.grid.deselectAll()
           grid.redrawVisibility()

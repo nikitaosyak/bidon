@@ -26,7 +26,7 @@ window.onload = () => {
 
       Facade.$.executor.addUnit(
         Facade.$.simulation.grid.respawns[Facade.$.connection.battle.data.myQueue],
-        BATTLE_FRACTIONS[Facade.$.connection.battle.data.myQueue],
+        0,
         true,
         true
       )
