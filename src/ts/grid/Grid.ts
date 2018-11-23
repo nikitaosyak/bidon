@@ -148,23 +148,7 @@ export class Grid {
   }
 
   public drawVisibility(center:Coord) {
-    // this._map.forEach(h => h.deselect())
 
-    const range = GridUtils.range(center, 3)
-    range.forEach(c => {
-      let line = GridUtils.line(center, c)
-      if (line[line.length-1].equals(center)) line = line.reverse()
-      let i = 0, h = this.getH(line[i])
-      while ((h.template.modifiers&Modifiers.NONOBSTRUCTING) > 0) {
-        !h.visited && h.highlight(HighlightMode.VISIBILITY)
-        if (i < line.length) {
-          h = this.getH(line[i])
-          i++
-        }
-        else break
-      }
-    })
-    this._map.forEach(h => h.visited = false)
   }
 
   public findPath(from:Coord, to: Coord): Coord[] {
@@ -227,9 +211,38 @@ export class Grid {
   }
 
   public redrawVisibility() {
+    const visibilityMap = []
+
     this._units.forEach(u => {
       if (!u) return
-      this.drawVisibility(u.location)
+      if (u.fraction != 0) return
+
+      const range = GridUtils.range(u.location, 3)
+      range.forEach(c => {
+        let line = GridUtils.line(u.location, c)
+        if (line[line.length-1].equals(u.location)) line = line.reverse()
+        let i = 0, h = this.getH(line[i])
+        while ((h.template.modifiers&Modifiers.NONOBSTRUCTING) > 0) {
+          // !h.visited && h.highlight(HighlightMode.VISIBILITY)
+          if (!h.visited) {
+            h.highlight(HighlightMode.VISIBILITY)
+            visibilityMap.push(h.location)
+          }
+          if (i < line.length) {
+            h = this.getH(line[i])
+            i++
+          }
+          else break
+        }
+      })
     })
+
+    this._units.forEach(u => {
+      if (!u) return
+      if (u.fraction === 0) return
+      u.visual.visible = this.getH(u.location).visible
+    })
+
+    this._map.forEach(h => h.visited = false)
   }
 }
