@@ -32,6 +32,7 @@ export enum BattleState {
 export enum BattleEvent {
   JOINED,
   MY_TURN_STARTED,
+  MY_TURN_ENDED,
   TURN_DATA,
   LEFT
 }
@@ -100,6 +101,11 @@ export class Battle implements Emitter {
       if (this._state === BattleState.WAITING_FOR_ALL_PLAYERS) {
         if (this._players.length === this.rules.players) {
           this.emit(BattleEvent.JOINED)
+          if (this.data.myQueue === 0) {
+            this.emit(BattleEvent.MY_TURN_STARTED)
+          } else {
+            // this.emit(BattleEvent.)
+          }
         }
       } else {
         if (this._players.length < this.rules.minPlayers) {
@@ -115,16 +121,22 @@ export class Battle implements Emitter {
     })
 
     this.owner.realtime.on(NakamaEvent.onmatchdata, (data: MatchData) => {
+      const exec = Facade.$.executor
       const packet = data.data as any
       switch (data.op_code) {
         case BattleOpCodes.ADD_UNIT:
-          Facade.$.executor.addUnit(
-            new Coord(packet.position.q, packet.position.r),
+          exec.addUnit(
+            Coord.fromSerialized(packet.position),
             1,
-            false, false
-          )
+            false, false)
           break
         case BattleOpCodes.MOVE_UNIT:
+          exec.moveUnit(
+            Coord.fromSerialized(packet.at),
+            Coord.fromSerializedArray(packet.path),
+            false,
+            false)
+          this.emit(BattleEvent.MY_TURN_STARTED)
           break
       }
     })
@@ -151,7 +163,7 @@ export class Battle implements Emitter {
     this._state = BattleState.WAITING_FOR_ALL_PLAYERS
   }
 
-  public async leaveMatch() {
+  public leaveMatch() {
     this._state = BattleState.LEAVING_MATCH
 
     this.LEAVE_MATCH.match_leave.match_id = this._data.match_id
@@ -164,14 +176,17 @@ export class Battle implements Emitter {
     this.emit(BattleEvent.LEFT)
   }
 
-  // public async makeMove() {
-  //
-  // }
-
   public async addUnits(at: Coord) {
     this.MATCH_DATA.match_data_send.op_code = BattleOpCodes.ADD_UNIT
     this.MATCH_DATA.match_data_send.data = {fraction: this.data.myQueue, position: at.serialize()}
     this.owner.realtime.sock.send(this.MATCH_DATA)
+  }
+
+  public moveUnit(at: Coord, path: Coord[]) {
+    this.MATCH_DATA.match_data_send.op_code = BattleOpCodes.MOVE_UNIT
+    this.MATCH_DATA.match_data_send.data = {at: at.serialize(), path: Coord.serializeArray(path)}
+    this.owner.realtime.sock.send(this.MATCH_DATA)
+    this.emit(BattleEvent.MY_TURN_ENDED)
   }
 
   dict: object = {};

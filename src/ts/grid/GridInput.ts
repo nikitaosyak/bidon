@@ -1,12 +1,11 @@
 import {Grid} from "./Grid";
-import {Cache, Raycaster} from "three";
+import {Raycaster} from "three";
 import {Facade} from "../Facade";
 import {Hexagon} from "./Hexagon";
 import {Unit} from "../unit/Unit";
-import {Coord, GridUtils} from "./GridUtils";
 import {HexTemplate} from "../gen/HexTemplate";
-import {TweenLite} from 'gsap'
 import {Utils} from "../utils/Utils";
+import {BattleEvent} from "../network/Battle";
 
 export class GridInput {
 
@@ -16,7 +15,7 @@ export class GridInput {
 
   private current: Unit = null
 
-  private enabled = true
+  private enabled = false
 
   constructor(grid: Grid) {
     this.grid = grid
@@ -25,6 +24,13 @@ export class GridInput {
 
     let started = false
     let moved = false
+
+    Facade.$.connection.battle.on(BattleEvent.MY_TURN_STARTED, e => {
+      this.enabled = true
+    })
+    Facade.$.connection.battle.on(BattleEvent.MY_TURN_ENDED, e => {
+      this.enabled = false
+    })
 
     const getTarget = e => {
       const normalizeX = v => (v/window.innerWidth) * 2 - 1
@@ -72,28 +78,7 @@ export class GridInput {
         if (target.template.modifiers & HexTemplate.Modifiers.WALKABLE &&
             path.length < 3 && path.length > 0) {
           console.log(`%cmoving along path`, Utils.LOG_INPUT)
-          this.enabled = false
-          const goOneStep = (to: Coord) => {
-            grid.centerOnLocationAnimated(to, 0.45)
-            TweenLite.to(this.current.visual.position, 0.5, Object.assign({
-              onComplete: () => {
-                grid.moveUnitInternal(this.current, to)
-                this.grid.deselectAll()
-                grid.redrawVisibility()
-                if (path.length > 0) {
-                  goOneStep(path.splice(0, 1)[0])
-                } else {
-                  this.enabled = true
-                  this.grid.deselectAll()
-                  grid.redrawVisibility()
-                  grid.drawReach(this.current.location)
-                }
-              }
-            }, GridUtils.getSpaceFromCoord(to)))
-          }
-          grid.deselectAll()
-          grid.redrawVisibility()
-          goOneStep(path.splice(0, 1)[0])
+          Facade.$.executor.moveUnit(this.current.location, path, true, true)
         }
       } else {
         if (targetUnit && targetUnit.fraction === 0) {

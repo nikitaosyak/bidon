@@ -34,6 +34,9 @@ export class Coord {
     return values.map(v => v.serialize())
   }
 
+  public static fromSerialized(v: any) { return new Coord(v.q, v.r) }
+  public static fromSerializedArray(vs: any[]) { return vs.map(v => this.fromSerialized(v)) }
+
   private static pool: Coord[] = []
   public static getOne(): Coord {
     if (this.pool.length > 0) return this.pool.shift()
