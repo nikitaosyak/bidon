@@ -1,5 +1,3 @@
-import {Renderer} from "./Renderer";
-import {Resizer} from "./Resizer";
 import {Emitter, AppEvent} from "./events";
 import {applyMixins, IUpdatable, Visual} from "./mixins";
 import {Utils} from "./utils/Utils";
@@ -13,6 +11,8 @@ import {Battle} from "./network/Battle";
 import {Grid} from "./grid/Grid";
 import {GridInput} from "./grid/GridInput";
 import {Executor} from "./simulation/Executor";
+import {Resizer} from "./render/Resizer";
+import {Renderer} from "./render/Renderer";
 
 export interface Simulation {
   grid: Grid,
@@ -36,7 +36,7 @@ export class Facade implements Emitter, IUpdatable {
     this._executor = new Executor()
 
     this._resizer.on(AppEvent.RESIZE, () => {
-      this._renderer.resize()
+      this._renderer.resize(this._resizer)
     })
 
     Utils.loadJSON('./gameData.cdb')

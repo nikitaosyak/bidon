@@ -1,5 +1,5 @@
-import {Emitter, AppEvent} from "./events";
-import {IUpdatable} from "./mixins";
+import {AppEvent, Emitter} from "../events";
+import {IUpdatable} from "../mixins";
 
 export class Resizer implements Emitter, IUpdatable {
 

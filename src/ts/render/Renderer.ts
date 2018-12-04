@@ -1,9 +1,10 @@
 import THREE = require('three')
 import {OrbitControls} from "three-orbitcontrols-ts";
-import {IUpdatable} from "./mixins";
-import {Facade} from "./Facade";
 import {Vector3} from "three";
-import RendererStats  = require('@xailabs/three-renderer-stats')// MACRO: prod-cutout
+import RendererStats  = require('@xailabs/three-renderer-stats') // MACRO: prod-cutout
+import {IUpdatable} from "../mixins";
+import {Resizer} from "./Resizer";
+import {UI} from "./UI";
 
 export class Renderer implements IUpdatable {
 
@@ -12,10 +13,12 @@ export class Renderer implements IUpdatable {
   private readonly _light: THREE.DirectionalLight; get light() { return this._light }
   private readonly _renderer: THREE.WebGLRenderer
   private readonly _controls: OrbitControls; get controls() { return this._controls }
+  private readonly _ui: UI
 
   private readonly stats2: RendererStats// MACRO: prod-cutout
 
   constructor() {
+
     this.stats2 = new RendererStats()                   // MACRO: prod-cutout
     this.stats2.domElement.style.position	= 'absolute'  // MACRO: prod-cutout
     this.stats2.domElement.style.left	= '0px'           // MACRO: prod-cutout
@@ -56,10 +59,11 @@ export class Renderer implements IUpdatable {
     const l1 = new THREE.PointLight("#f0f0f0", 0.4, 100)
     l1.position.set(-5, -5, -5)
     this._scene.add(l1)
+
+    this._ui = new UI()
   }
 
-  public resize(): void {
-    const resizer = Facade.$.resizer
+  public resize(resizer: Resizer): void {
     this._renderer.setSize(resizer.width, resizer.height, true)
     this._camera.aspect = resizer.ar
     this._camera.updateProjectionMatrix()
@@ -67,6 +71,7 @@ export class Renderer implements IUpdatable {
 
   public update(dt: number):void {
     this._renderer.render(this._scene, this._camera)
+    this._ui.render(this._renderer)
     this.stats2.update(this._renderer)// MACRO: prod-cutout
     this._controls.update()
   }
