@@ -36,6 +36,7 @@ export class Renderer implements IUpdatable {
       devicePixelRatio: window.devicePixelRatio,
       logarithmicDepthBuffer: false
     })
+    this._renderer.autoClear = false
     this._renderer.setSize(800, 600)
     this._renderer.setClearColor(0x140b33)
     this._renderer.setPixelRatio(window.devicePixelRatio)
@@ -70,6 +71,7 @@ export class Renderer implements IUpdatable {
   }
 
   public update(dt: number):void {
+    this._renderer.clear()
     this._renderer.render(this._scene, this._camera)
     this._ui.render(this._renderer)
     this.stats2.update(this._renderer)// MACRO: prod-cutout
