@@ -20,13 +20,6 @@ export class UI {
     s.position.set(0.1, 0.1, -1);
     s.scale.set(0.2, 0.2, 1);
     this._scene.add(s)
-
-    // addTestSprite() {
-    //   /**
-    //    * @type {SpriteMaterialParameters}
-    //    */
-
-    // },
   }
 
   public resize(ar: number) {
