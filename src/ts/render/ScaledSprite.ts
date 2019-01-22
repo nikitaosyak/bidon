@@ -7,10 +7,6 @@ export class ScaledSprite extends Sprite {
     super(material);
   }
 
-  setBaseScaleX(x: number) { this.baseScale.x = x; return this }
-  setBaseScaleY(y: number) { this.baseScale.y = y; return this }
-
-  rescale(size) {
-    this.scale.set(this.baseScale.x * size.x, this.baseScale.y * size.y, 1)
-  }
+  public setScale(value:number) { this.scale.set(value, value, 1); return this }
+  public setName(value: string) { this.name = value; return this }
 }

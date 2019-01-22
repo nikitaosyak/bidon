@@ -61,7 +61,7 @@ export class Renderer implements IUpdatable {
     l1.position.set(-5, -5, -5)
     this._scene.add(l1)
 
-    this._ui = new UI()
+    this._ui = new UI(this._camera)
   }
 
   public resize(resizer: Resizer): void {
@@ -72,10 +72,11 @@ export class Renderer implements IUpdatable {
   }
 
   public update(dt: number):void {
+    this._controls.update()
+
     this._renderer.clear()
     this._renderer.render(this._scene, this._camera)
     this._ui.render(this._renderer)
     this.stats2.update(this._renderer)// MACRO: prod-cutout
-    this._controls.update()
   }
 }
