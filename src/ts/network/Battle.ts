@@ -109,7 +109,7 @@ export class Battle implements Emitter {
           console.log(`%cmy faction: ${this._faction}`, Utils.LOG_BATTLE)
           this.emit(BattleEvent.JOINED)
           if (this._faction === 0) {
-            this.emit(BattleEvent.MY_TURN_STARTED)
+            Facade.eloop.emit(BattleEvent.MY_TURN_STARTED)
           } else {
             // this.emit(BattleEvent.)
           }
@@ -143,7 +143,7 @@ export class Battle implements Emitter {
             Coord.fromSerializedArray(packet.path),
             false,
             false)
-          this.emit(BattleEvent.MY_TURN_STARTED)
+          Facade.eloop.emit(BattleEvent.MY_TURN_STARTED)
           break
       }
     })
@@ -192,7 +192,7 @@ export class Battle implements Emitter {
     this.MATCH_DATA.match_data_send.op_code = BattleOpCodes.MOVE_UNIT
     this.MATCH_DATA.match_data_send.data = {at: at.serialize(), path: Coord.serializeArray(path)}
     this.owner.realtime.sock.send(this.MATCH_DATA)
-    this.emit(BattleEvent.MY_TURN_ENDED)
+    Facade.eloop.emit(BattleEvent.MY_TURN_ENDED)
   }
 
   dict: object = {};

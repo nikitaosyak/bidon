@@ -6,7 +6,7 @@ import {Unit} from "../unit/Unit";
 import {HexTemplate} from "../gen/HexTemplate";
 import {Utils} from "../utils/Utils";
 import {BattleEvent} from "../network/Battle";
-import {ScaledSprite} from "../render/ScaledSprite";
+import {AnchoredSprite} from "../render/AnchoredSprite";
 
 enum ActionMode {
   NONE, MOVEMENT, ATTACK
@@ -31,10 +31,10 @@ export class GridInput {
     let started = false
     let moved = false
 
-    Facade.$.connection.battle.on(BattleEvent.MY_TURN_STARTED, e => {
+    Facade.eloop.on(BattleEvent.MY_TURN_STARTED, e => {
       this.enabled = true
     })
-    Facade.$.connection.battle.on(BattleEvent.MY_TURN_ENDED, e => {
+    Facade.eloop.on(BattleEvent.MY_TURN_ENDED, e => {
       this.enabled = false
     })
 
@@ -113,7 +113,7 @@ export class GridInput {
       if (moved) { moved = false; return }
       e.preventDefault()
 
-      const button = <ScaledSprite>getTarget(e, Facade.$.renderer.ui.camera, Facade.$.renderer.ui.scene.children)
+      const button = <AnchoredSprite>getTarget(e, Facade.$.renderer.ui.camera, Facade.$.renderer.ui.scene.children)
       if (button) {
         if (button.name === 'attack') {
           this.selection = null

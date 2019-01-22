@@ -42,6 +42,8 @@ window.onload = () => {
       Assets.add('ui_attack', 'assets/ui/attack.png')
       Assets.add('ui_cancel', 'assets/ui/cancel.png')
       Assets.add('ui_walk', 'assets/ui/walk.png')
+      Assets.add('ui_your_move', 'assets/ui/your_move.png')
+      Assets.add('ui_enemy_move', 'assets/ui/enemy_move.png')
         .loadAll().then(() => {
         Utils.loadJSON('./rules.json').then(rulesRaw => {
           const rules = Rules.fromJSON(JSON.parse(rulesRaw))

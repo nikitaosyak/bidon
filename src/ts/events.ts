@@ -4,7 +4,7 @@ export enum AppEvent {
 }
 
 export class Emitter {
-  dict: object
+  dict: object = {}
   constructor() {}
 
   on(event:any, callback:(...eventData:any[]) => void) {

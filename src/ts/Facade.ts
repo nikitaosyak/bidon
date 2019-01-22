@@ -40,6 +40,8 @@ export class Facade implements Emitter, IUpdatable {
     })
   }
 
+  public static eloop: Emitter = new Emitter()
+
   public static get $() {
     return this._instance || (this._instance = new Facade())
   }

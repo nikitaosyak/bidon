@@ -23,7 +23,7 @@ export class Renderer implements IUpdatable {
     this.stats2.domElement.style.position	= 'absolute'  // MACRO: prod-cutout
     this.stats2.domElement.style.left	= '0px'           // MACRO: prod-cutout
     this.stats2.domElement.style.bottom	= '0px'         // MACRO: prod-cutout
-    document.body.appendChild( this.stats2.domElement ) // MACRO: prod-cutout
+    // document.body.appendChild( this.stats2.domElement ) // MACRO: prod-cutout
 
     this._renderer = new THREE.WebGLRenderer({
       canvas: document.getElementById('canvas') as HTMLCanvasElement,

@@ -1,7 +1,9 @@
 import {Camera, OrthographicCamera, Renderer, Scene, SpriteMaterial, Texture, Vector3} from "three";
 import {Assets} from "../utils/Assets";
-import {ScaledSprite} from "./ScaledSprite";
+import {AnchoredSprite} from "./AnchoredSprite";
 import {Unit} from "../unit/Unit";
+import {Facade} from "../Facade";
+import {BattleEvent} from "../network/Battle";
 
 export class UI {
 
@@ -14,6 +16,8 @@ export class UI {
   private projVector = new Vector3()
 
   private _unitMenu = []
+  private _yourMoveInd: AnchoredSprite
+  private _enemyMoveInd: AnchoredSprite
 
   constructor(worldCamera: Camera) {
     this._projectionCamera = worldCamera
@@ -24,10 +28,22 @@ export class UI {
     this._scene = new Scene()
 
     this._unitMenu = [
-      new ScaledSprite(new SpriteMaterial({map: Assets.getAsset<Texture>('ui_attack'), color: 0xffffff})).setScale(0.12).setName('attack'),
-      new ScaledSprite(new SpriteMaterial({map: Assets.getAsset<Texture>('ui_cancel'), color: 0xffffff})).setScale(0.12).setName('cancel'),
-      new ScaledSprite(new SpriteMaterial({map: Assets.getAsset<Texture>('ui_walk'), color: 0xffffff})).setScale(0.12).setName('walk')
+      new AnchoredSprite(new SpriteMaterial({map: Assets.getAsset<Texture>('ui_attack'), color: 0xffffff})).setScale(0.12).setName('attack'),
+      new AnchoredSprite(new SpriteMaterial({map: Assets.getAsset<Texture>('ui_cancel'), color: 0xffffff})).setScale(0.12).setName('cancel'),
+      new AnchoredSprite(new SpriteMaterial({map: Assets.getAsset<Texture>('ui_walk'), color: 0xffffff})).setScale(0.12).setName('walk')
     ]
+
+    this._yourMoveInd = new AnchoredSprite(new SpriteMaterial({map: Assets.getAsset<Texture>('ui_your_move')})).setUnevenScale(0.2, 0.05).setPosition(0, 0).setPivot(0, 0)
+    this._enemyMoveInd = new AnchoredSprite(new SpriteMaterial({map: Assets.getAsset<Texture>('ui_enemy_move')})).setUnevenScale(0.2, 0.05).setPosition(0, 0).setPivot(0, 0)
+
+    Facade.eloop.on(BattleEvent.MY_TURN_STARTED, e => {
+      this._scene.remove(this._enemyMoveInd)
+      this._scene.add(this._yourMoveInd)
+    })
+    Facade.eloop.on(BattleEvent.MY_TURN_ENDED, e => {
+      this._scene.add(this._enemyMoveInd)
+      this._scene.remove(this._yourMoveInd)
+    })
   }
 
   public resize(ar: number) {
