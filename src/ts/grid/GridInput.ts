@@ -91,6 +91,7 @@ export class GridInput {
             console.log(`%cmoving along path`, Utils.LOG_INPUT)
             Facade.$.executor.moveUnit(this.selection.location, path, true, true)
             this.selection = null
+            this.actionMode = ActionMode.NONE
           }
         }
       } else {
@@ -150,15 +151,15 @@ export class GridInput {
 
       e.preventDefault()
       if (this.actionMode === ActionMode.MOVEMENT) {
-        // const target = getTarget(e)
-        // if (!target) return
-        // this.grid.deselectAll()
-        // grid.redrawVisibility()
-        // grid.drawReach(this.selection.location)
+        const target: Hexagon = getTarget(e, Facade.$.renderer.camera, this.grid.intersectGroup)['self']
+        if (!target) return
+        this.grid.deselectAll()
+        grid.redrawVisibility()
+        grid.drawReach(this.selection.location)
 
-        // if (target.template.modifiers & HexTemplate.Modifiers.WALKABLE) {
-        //   grid.drawPath(target.location, this.selection.location)
-        // }
+        if (target.template.modifiers & HexTemplate.Modifiers.WALKABLE) {
+          grid.drawPath(target.location, this.selection.location)
+        }
       }
 
       if (this.actionMode === ActionMode.ATTACK) {

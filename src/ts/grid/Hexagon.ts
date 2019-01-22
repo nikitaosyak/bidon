@@ -30,7 +30,7 @@ export class Hexagon implements Visual {
     this.hiddenColor = chroma.scale([this._template.visualMarker, '#222222']).mode('lab')(0.7).hex()
     this.visibleColor = chroma(this._template.visualMarker).hex()
     this.reachColor = chroma.scale([this._template.visualMarker, '#00FF00']).mode('lab')(0.5).hex()
-    this.pathColor = chroma.scale([this._template.visualMarker, '#FFFFFF']).mode('lab')(0.7).hex()
+    this.pathColor = chroma.scale([this._template.visualMarker, '#FF22FF']).mode('lab')(0.7).hex()
 
     const meshTemplate = Assets.getAsset<Mesh>('hex')
     this.setVisual(new Mesh(meshTemplate.geometry.clone(), new MeshStandardMaterial({
