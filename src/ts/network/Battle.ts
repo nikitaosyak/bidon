@@ -18,7 +18,6 @@ export class BattleData {
   public ticket: string
   public token: string
   public match_id: string
-  public myQueue: number
 }
 
 export enum BattleState {
@@ -42,8 +41,11 @@ export enum BattleOpCodes {
   MOVE_UNIT = 2
 }
 
-export const BATTLE_FRACTIONS = [
-  0x2222CC, 0xCC2222, 0x22CC22, 0xCC22CC
+export const FRACTION_COLOR = [
+  "#32329A",
+  "#9A3232",
+  "#329A32",
+  "#9A32AA"
 ]
 
 export class Battle implements Emitter {
@@ -76,6 +78,8 @@ export class Battle implements Emitter {
   private _rules: Rules; public get rules(): Rules { return this._rules }
   private _data: BattleData; public get data(): BattleData { return this._data }
   private _players: Presence[]; public get players(): Presence[] { return this._players }
+  private _factions: number; public get factions(): number { return this._factions }
+  private _faction: number; public get faction(): number { return this._faction }
 
   constructor(owner: Connection) {
     this.owner = owner
@@ -96,12 +100,15 @@ export class Battle implements Emitter {
         }
       }
 
-      console.log(`%ccurrent presence: ${JSON.stringify(this._players.map(p => p.username))}`, Utils.LOG_BATTLE)
 
       if (this._state === BattleState.WAITING_FOR_ALL_PLAYERS) {
         if (this._players.length === this.rules.players) {
+          console.log(`%ccomplete presences: ${JSON.stringify(this._players.map(p => p.username))}`, Utils.LOG_BATTLE)
+          this._factions = this.rules.players
+          this._faction = this._players.map(p => p.user_id).indexOf(this.owner.auth.session.user_id)
+          console.log(`%cmy faction: ${this._faction}`, Utils.LOG_BATTLE)
           this.emit(BattleEvent.JOINED)
-          if (this.data.myQueue === 0) {
+          if (this._faction === 0) {
             this.emit(BattleEvent.MY_TURN_STARTED)
           } else {
             // this.emit(BattleEvent.)
@@ -127,7 +134,7 @@ export class Battle implements Emitter {
         case BattleOpCodes.ADD_UNIT:
           exec.addUnit(
             Coord.fromSerialized(packet.position),
-            1,
+            packet.faction,
             false, false)
           break
         case BattleOpCodes.MOVE_UNIT:
@@ -158,7 +165,6 @@ export class Battle implements Emitter {
     let result : any = await this.owner.realtime.sock.send(this.JOIN_MATCH)
     result = result.match as Match
     this._data.match_id = this.MATCH_DATA.match_data_send.match_id = result.match_id
-    this._data.myQueue = result.presences.length
     this._players = result.presences.splice(0)
     this._state = BattleState.WAITING_FOR_ALL_PLAYERS
   }
@@ -178,7 +184,7 @@ export class Battle implements Emitter {
 
   public async addUnits(at: Coord) {
     this.MATCH_DATA.match_data_send.op_code = BattleOpCodes.ADD_UNIT
-    this.MATCH_DATA.match_data_send.data = {fraction: this.data.myQueue, position: at.serialize()}
+    this.MATCH_DATA.match_data_send.data = {faction: this._faction, position: at.serialize()}
     this.owner.realtime.sock.send(this.MATCH_DATA)
   }
 

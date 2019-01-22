@@ -18,8 +18,8 @@ export class Grid {
   private readonly _intersectGroup: Mesh[]; public get intersectGroup() { return this._intersectGroup }
 
   private _units: Unit[]; public get units() { return this._units };
-  public getU(c: Coord) : Unit { return this._units[GridUtils.coordToIndex(c)] }
-  public getH(c: Coord) : Hexagon { return this._map[GridUtils.coordToIndex(c)] }
+  public getUnitAt(c: Coord) : Unit { return this._units[GridUtils.coordToIndex(c)] }
+  public getHexAt(c: Coord) : Hexagon { return this._map[GridUtils.coordToIndex(c)] }
   private _respawns: Coord[]; public get respawns() { return this._respawns }
 
   private dirty = true; public setDirty() { this.dirty = true }
@@ -76,14 +76,14 @@ export class Grid {
   }
 
   public centerOnLocation(v: Coord) : void {
-    const h = this.getH(v)
+    const h = this.getHexAt(v)
     const to = Math.atan2(h.visual.position.z, h.visual.position.x)
     this._group.rotation.set(0, to, 0)
   }
 
   public centerOnLocationAnimated(v: Coord, time: number = 0.4) : void {
     const dummy = {rotation: this._group.rotation.y}
-    const h = this.getH(v)
+    const h = this.getHexAt(v)
     const to = Math.atan2(h.visual.position.z, h.visual.position.x)
 
     TweenLite.to(
@@ -129,10 +129,10 @@ export class Grid {
     while (depth --> 0) {
       let newQueue = []
       queue.forEach(q => {
-        const qHex = this.getH(q)
+        const qHex = this.getHexAt(q)
         if (qHex.visited) return
         const reachable = qHex.template.modifiers&Modifiers.WALKABLE
-        const occupied = this.getU(qHex.location)
+        const occupied = this.getUnitAt(qHex.location)
         if (reachable) {
           newQueue = newQueue.concat(GridUtils.getNeighbours(q))
           if (occupied) {
@@ -180,8 +180,8 @@ export class Grid {
 
       GridUtils.getNeighbours(current).forEach(next => {
         const calculateCost = (pos: Coord) => {
-          const gridCost = this.getH(pos).template.modifiers & Modifiers.NONOBSTRUCTING ? 1 : 100
-          const unitCost = this.getU(pos) ? 100 : 1
+          const gridCost = this.getHexAt(pos).template.modifiers & Modifiers.NONOBSTRUCTING ? 1 : 100
+          const unitCost = this.getUnitAt(pos) ? 100 : 1
           return Math.max(gridCost, unitCost)
         }
         const nextIdx = GridUtils.coordToIndex(next)
@@ -206,7 +206,7 @@ export class Grid {
     const path = this.findPath(from, to)
     if (path.length > 3) return
     path.forEach(p => {
-      this.getH(p).highlight(HighlightMode.PATH)
+      this.getHexAt(p).highlight(HighlightMode.PATH)
     })
   }
 
@@ -215,13 +215,13 @@ export class Grid {
 
     this._units.forEach(u => {
       if (!u) return
-      if (u.fraction != 0) return
+      if (u.faction != Facade.$.connection.battle.faction) return
 
       const range = GridUtils.range(u.location, 3)
       range.forEach(c => {
         let line = GridUtils.line(u.location, c)
         if (line[line.length-1].equals(u.location)) line = line.reverse()
-        let i = 0, h = this.getH(line[i])
+        let i = 0, h = this.getHexAt(line[i])
         while ((h.template.modifiers&Modifiers.NONOBSTRUCTING) > 0) {
           // !h.visited && h.highlight(HighlightMode.VISIBILITY)
           if (!h.visited) {
@@ -229,7 +229,7 @@ export class Grid {
             visibilityMap.push(h.location)
           }
           if (i < line.length) {
-            h = this.getH(line[i])
+            h = this.getHexAt(line[i])
             i++
           }
           else break
@@ -239,8 +239,8 @@ export class Grid {
 
     this._units.forEach(u => {
       if (!u) return
-      if (u.fraction === 0) return
-      u.visual.visible = this.getH(u.location).visible
+      if (u.faction === Facade.$.connection.battle.faction) return
+      u.visual.visible = this.getHexAt(u.location).visible
     })
 
     this._map.forEach(h => h.visited = false)

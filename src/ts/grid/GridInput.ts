@@ -13,7 +13,7 @@ export class GridInput {
   private grid: Grid
   private caster: Raycaster
 
-  private current: Unit = null
+  private selection: Unit = null
 
   private enabled = false
 
@@ -65,27 +65,33 @@ export class GridInput {
 
       e.preventDefault()
 
-      const target:Hexagon = getTarget(e)
-      if (!target) return
-      const targetUnit = grid.getU(target.location)
-      if (!targetUnit && this.current) {
-      } else if (targetUnit && targetUnit !== this.current) {
-        this.current = null
+      Facade.$.renderer.ui.hideUnitMenu()
+
+      const hex:Hexagon = getTarget(e)
+      if (!hex) return
+      const unit = grid.getUnitAt(hex.location)
+      if (!unit && this.selection) {
+        // show hexagon info?
+      } else if (unit && unit !== this.selection) {
+        // selected another unit
+        this.selection = null
       }
-      if (this.current) {
-        const path = grid.findPath(target.location, this.current.location).reverse()
-        path.splice(0, 1)
-        if (target.template.modifiers & HexTemplate.Modifiers.WALKABLE &&
-            path.length < 3 && path.length > 0) {
-          console.log(`%cmoving along path`, Utils.LOG_INPUT)
-          Facade.$.executor.moveUnit(this.current.location, path, true, true)
-        }
+      if (this.selection) {
+        // const path = grid.findPath(hex.location, this.selection.location).reverse()
+        // path.splice(0, 1)
+        // if (hex.template.modifiers & HexTemplate.Modifiers.WALKABLE &&
+        //     path.length < 3 && path.length > 0) {
+        //   console.log(`%cmoving along path`, Utils.LOG_INPUT)
+        //   Facade.$.executor.moveUnit(this.selection.location, path, true, true)
+        // }
       } else {
-        if (targetUnit && targetUnit.fraction === 0) {
-          this.current = targetUnit
+        if (unit && unit.faction === Facade.$.connection.battle.faction) {
+          console.log('selected unit?')
+          this.selection = unit
           this.grid.deselectAll()
           grid.redrawVisibility()
-          grid.drawReach(target.location)
+          Facade.$.renderer.ui.showUnitMenu()
+          // grid.drawReach(target.location)
         }
       }
     }
@@ -98,18 +104,18 @@ export class GridInput {
       if (!this.enabled) return
       started ? moved = true : moved = false
       if (moved) return
-      if (!this.current) return
+      if (!this.selection) return
 
       e.preventDefault()
       const target = getTarget(e)
       if (!target) return
-      this.grid.deselectAll()
-      grid.redrawVisibility()
-      grid.drawReach(this.current.location)
+      // this.grid.deselectAll()
+      // grid.redrawVisibility()
+      // grid.drawReach(this.selection.location)
 
-      if (target.template.modifiers & HexTemplate.Modifiers.WALKABLE) {
-        grid.drawPath(target.location, this.current.location)
-      }
+      // if (target.template.modifiers & HexTemplate.Modifiers.WALKABLE) {
+      //   grid.drawPath(target.location, this.selection.location)
+      // }
     }
 
     this.dom.addEventListener('touchstart', onStart)

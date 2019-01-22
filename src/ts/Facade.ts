@@ -38,23 +38,15 @@ export class Facade implements Emitter, IUpdatable {
     this._resizer.on(AppEvent.RESIZE, () => {
       this._renderer.resize(this._resizer)
     })
-
-    Utils.loadJSON('./gameData.cdb')
-      .then(rawData => {
-        this._cdb = new CDB(rawData)
-        Assets.add('hex', 'assets/hex/hex.gltf')
-          .loadAll().then(() => {
-            this.emit(AppEvent.ASSETS_LOAD_COMPLETE)
-        })
-      })
-      .catch(Utils.logPromisedError)
   }
 
   public static get $() {
     return this._instance || (this._instance = new Facade())
   }
 
+  public injectCDBData(rawData: string) { this._cdb = new CDB(rawData) }
   private _cdb: CDB; get cdb() { return this._cdb }
+
   private readonly _renderer: Renderer; get renderer() { return this._renderer }
   private readonly _resizer: Resizer; get resizer() { return this._resizer }
   private readonly _connection: Connection; get connection() { return this._connection }

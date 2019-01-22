@@ -2,13 +2,11 @@ import {Facade} from "./Facade";
 import {AppEvent} from "./events";
 import {Grid} from "./grid/Grid";
 import Stats = require('Stats.js')
-import {GridInput} from "./grid/GridInput";
-import {Unit} from "./unit/Unit";
-import {Mesh, MeshBasicMaterial, SphereBufferGeometry} from "three";
-import {Coord} from "./grid/GridUtils";
 import {Utils} from "./utils/Utils";
 import {Rules} from "./simulation/Rules";
-import {BATTLE_FRACTIONS, BattleEvent} from "./network/Battle";
+import {FRACTION_COLOR, BattleEvent} from "./network/Battle";
+import {CDB} from "./gen/CDB";
+import {Assets} from "./utils/Assets";
 
 window.onload = () => {
 
@@ -16,18 +14,13 @@ window.onload = () => {
   stats.showPanel(0)                    // MACRO: prod-cutout
   document.body.appendChild(stats.dom)  // MACRO: prod-cutout
 
-  const matchmake = () => {
-
-
-  }
-
   const startGame = () => {
     Facade.$.connection.battle.on(BattleEvent.JOINED, e => {
       Facade.$.startNewSimulation()
 
       Facade.$.executor.addUnit(
-        Facade.$.simulation.grid.respawns[Facade.$.connection.battle.data.myQueue],
-        0,
+        Facade.$.simulation.grid.respawns[Facade.$.connection.battle.faction],
+        Facade.$.connection.battle.faction,
         true,
         true
       )
@@ -43,20 +36,28 @@ window.onload = () => {
   }
 
   // show asset loading here
-  Facade.$.on(AppEvent.ASSETS_LOAD_COMPLETE, () => {
-    // show UI here
+  Utils.loadJSON('./gameData.cdb')
+    .then(rawData => {
+      Assets.add('hex', 'assets/hex/hex.gltf')
+      Assets.add('ui_attack', 'assets/ui/attack.png')
+      Assets.add('ui_cancel', 'assets/ui/cancel.png')
+      Assets.add('ui_walk', 'assets/ui/walk.png')
+        .loadAll().then(() => {
+        Utils.loadJSON('./rules.json').then(rulesRaw => {
+          const rules = Rules.fromJSON(JSON.parse(rulesRaw))
+          console.log(rules)
 
-    Utils.loadJSON('./rules.json').then(rulesRaw => {
-      const rules = Rules.fromJSON(JSON.parse(rulesRaw))
-      console.log(rules)
-      Facade.$.connection.matchmaker.setRules(rules)
-      Facade.$.connection.auth.connect()
-        .then(Facade.$.connection.realtime.connect.bind(Facade.$.connection.realtime))
-        .then(Facade.$.connection.matchmaker.findMatch.bind(Facade.$.connection.matchmaker))
-        .then(startGame)
-        .catch(e => {
-          Utils.logPromisedError(e)
+          Facade.$.injectCDBData(rawData)
+          Facade.$.connection.matchmaker.setRules(rules)
+          Facade.$.connection.auth.connect()
+            .then(Facade.$.connection.realtime.connect.bind(Facade.$.connection.realtime))
+            .then(Facade.$.connection.matchmaker.findMatch.bind(Facade.$.connection.matchmaker))
+            .then(startGame)
+            .catch(e => {
+              Utils.logPromisedError(e)
+            })
         })
+      })
     })
-  })
+    .catch(Utils.logPromisedError)
 }

@@ -4,11 +4,11 @@ import {Coord} from "../grid/GridUtils";
 
 export class Unit implements Visual {
 
-  public fraction: number;
+  public faction: number;
   public location: Coord;
 
-  constructor(fraction:number, visual: Object3D) {
-    this.fraction = fraction
+  constructor(faction:number, visual: Object3D) {
+    this.faction = faction
     this.setVisual(visual)
   }
 

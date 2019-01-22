@@ -3,6 +3,7 @@ export class Utils {
   public static LOG_ASSETS = 'background: #222; color: #bada55; font-weight: bold;'
   public static LOG_NETWORK = 'background: #2222AA; color: #E2E2E2; font-weight: bold;'
   public static LOG_BATTLE = 'background: #AA3232; color: #E2E2E2; font-weight: bold;'
+  public static LOG_EXECUTOR = 'background: #32AA32; color: #E2E2E2; font-weight: bold;'
   public static LOG_INPUT= 'background: #AAAA32; color: #E2E2E2; font-weight: bold;'
 
   static loadJSON(url) {

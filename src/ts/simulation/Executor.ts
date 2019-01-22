@@ -2,15 +2,17 @@ import {Coord, GridUtils} from "../grid/GridUtils";
 import {Unit} from "../unit/Unit";
 import {Mesh, MeshBasicMaterial, SphereBufferGeometry} from "three";
 import {Facade} from "../Facade";
-import {BATTLE_FRACTIONS} from "../network/Battle";
+import {FRACTION_COLOR} from "../network/Battle";
 import {TweenLite} from 'gsap'
+import {Utils} from "../utils/Utils";
 
 export class Executor {
 
-  public addUnit(at: Coord, fraction: number, visualise: boolean, propagate) {
-    const u = new Unit(fraction, new Mesh(
+  public addUnit(at: Coord, faction: number, visualise: boolean, propagate) {
+    console.log(`%cadd unit of f[${faction}] at ${at}`, Utils.LOG_EXECUTOR)
+    const u = new Unit(faction, new Mesh(
       new SphereBufferGeometry(0.7, 8, 8),
-      new MeshBasicMaterial({color: BATTLE_FRACTIONS[fraction]})
+      new MeshBasicMaterial({color: FRACTION_COLOR[faction]})
     ))
 
     propagate && Facade.$.connection.battle.addUnits(at)
@@ -30,7 +32,7 @@ export class Executor {
     }
 
     const grid = Facade.$.simulation.grid
-    const unit = grid.getU(at)
+    const unit = grid.getUnitAt(at)
 
     const goOneStep = (to: Coord) => {
      visualize && grid.centerOnLocationAnimated(to, 0.45)

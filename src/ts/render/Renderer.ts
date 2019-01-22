@@ -13,7 +13,7 @@ export class Renderer implements IUpdatable {
   private readonly _light: THREE.DirectionalLight; get light() { return this._light }
   private readonly _renderer: THREE.WebGLRenderer
   private readonly _controls: OrbitControls; get controls() { return this._controls }
-  private readonly _ui: UI
+  private readonly _ui: UI; get ui() { return this._ui }
 
   private readonly stats2: RendererStats// MACRO: prod-cutout
 
@@ -68,6 +68,7 @@ export class Renderer implements IUpdatable {
     this._renderer.setSize(resizer.width, resizer.height, true)
     this._camera.aspect = resizer.ar
     this._camera.updateProjectionMatrix()
+    this._ui.resize(resizer.ar)
   }
 
   public update(dt: number):void {

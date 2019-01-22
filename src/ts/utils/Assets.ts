@@ -1,5 +1,6 @@
 import GLTFLoader = require('three-gltf-loader');
 import {Utils} from "./Utils";
+import {TextureLoader} from "three";
 
 export class Assets {
 
@@ -29,29 +30,24 @@ export class Assets {
       console.log(`%cloading ${alias} from ${url}..`, Utils.LOG_ASSETS)
       let Loader
       let assetExtractor
-      let args = []
-      let callFunction = ''
+      const onLoad = result => {
+        console.log(`%ccomplete loading ${alias}`, Utils.LOG_ASSETS)
+        assetExtractor(result)
+        resolve()
+      }
       const ext = url.match(/\..{3,4}$/)[0]
       switch(ext) {
         case '.gltf':
           Loader = GLTFLoader;
           assetExtractor = result => this.cache[alias] = result.scene.children[0]
-          callFunction = 'load'
-          args = [
-            url,
-            result => {
-              console.log(`%ccomplete loading ${alias}`, Utils.LOG_ASSETS)
-              assetExtractor(result)
-              resolve()
-            },
-            progress => {},
-            error => reject
-            ]
           break;
+        case '.png':
+          Loader = TextureLoader;
+          assetExtractor = texture => this.cache[alias] = texture
       }
 
       const l = new Loader()
-      try { l[callFunction](...args) } catch (e) { reject(e) }
+      try { l.load(url, onLoad, undefined, reject) } catch (e) { reject(e) }
     })
   }
 }

@@ -27,7 +27,7 @@ export class Realtime implements Emitter {
 
   public connect() {
     console.log('%ccreating websocket connection', Utils.LOG_NETWORK)
-    this._sock = this.owner.nakama.createSocket(this.owner.nakama.useSSL, true)
+    this._sock = this.owner.nakama.createSocket(this.owner.nakama.useSSL, false)
 
     Object.keys(NakamaEvent).forEach(event => {
       this._sock[event] = data => this.emit(event, data)

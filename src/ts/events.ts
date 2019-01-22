@@ -1,6 +1,5 @@
 
 export enum AppEvent {
-  ASSETS_LOAD_COMPLETE,
   RESIZE,
 }
 
